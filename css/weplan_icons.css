@@ -1,0 +1,16 @@
+/* Font-Awesome doesn't include all required icons, so 
+we provide some ourselves here (icons from glyphicons) */
+i.we-icon {
+	width:18px;
+	height:18px;
+	display:inline-block;
+	background-repeat:no-repeat;
+	background-size:18px 18px;
+	position:relative;
+	top:2px;
+}
+
+.we-beach {
+	background-image:url(../images/glyphicons_free/glyphicons/png/glyphicons_013_beach_umbrella.png);	
+}
+

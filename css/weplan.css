@@ -1,0 +1,222 @@
+html,body {
+	width:100%;
+	height:100%;
+}
+
+body {
+	font-size:18px;
+	margin:0;
+	padding:0;
+}
+
+button.back {
+	float:left;
+	margin-left:1em;
+}
+
+.row, header {
+	width:85%;
+	margin-right:auto;
+	margin-left:auto;
+}
+
+header {
+	width:100%;
+	background:#39b3d7;
+	padding:0.5em 0;
+	text-align:center;
+	color:white;
+}
+
+/* Slogan/Logo */
+header h1 {
+	margin:0;
+}
+
+header .slogan {
+	font-style:italic;
+}
+
+.page {
+	width:100%;
+	min-height:100%;
+}
+
+#search_page header {
+	margin-bottom:1em;
+}
+
+#search_page .row {
+	margin-bottom:2em;
+}
+
+#search_page label {
+	/* Force line break after label */
+	display:block;
+	margin-bottom:0.5em;
+}
+
+/* Number elements for wizard like search */
+#search_page label span {
+	display:inline-block;
+	border-radius:2em;
+	background:#999;
+	color:white;
+	width:2em;
+	height:2em;
+	padding-top:0.3em;
+	text-align:center;
+	vertical-align:middle;
+	margin-right:0.5em;
+}
+
+#search_page input.half-width {
+	width:40%;
+}
+
+#list_and_map_view_outer_container {
+	width:100%;
+	height:100%;
+	overflow:auto;
+}
+
+#list_and_map_view {
+	width:200%;
+	height:100%;
+	position:relative;
+}
+
+#list_and_map_view .page {
+	width:50%;
+	height:100%;
+	overflow:auto;
+	float:left;
+}
+
+/* Swipe handles */
+
+#map_view_handle {
+	z-index:10;
+
+	position:absolute;
+	left:50%;
+	top:0;
+	text-transform:uppercase;
+	font-size:1.4em;
+	height:100%;
+	background-color:rgba(0, 0, 0, .8);
+	width:.5em;
+}
+
+#map_view_handle span {
+	display:block;
+	/* TODO: need add different browser prefixes */
+	-webkit-transform:rotate(-90deg);
+	-webkit-transform-origin:0% 0%;
+
+	position:absolute;
+	top:65%;
+	left:-1.71em;
+	color:white;
+	padding:0.3em 0 0 0;
+	border-top-right-radius:2em;
+	border-top-left-radius:2em;
+	background-color:rgba(0, 0, 0, .8);
+	letter-spacing:2px;
+	white-space:nowrap;
+	width:8.5em;
+	text-align:center;
+}
+
+#list_view_handle {
+	z-index:1000;
+	position:absolute;
+	left:0;
+	top:0;
+	text-transform:uppercase;
+	font-size:1.4em;
+	height:100%;
+	background-color:rgba(0, 0, 0, .8);
+	width:.5em;
+}
+
+#list_view_handle span {
+	display:block;
+	/* TODO: need add different browser prefixes */
+	-webkit-transform:rotate(-90deg);
+	-webkit-transform-origin:0% 0%;
+
+	position:absolute;
+	top:65%;
+	left:0.51em;
+	color:white;
+	padding:0 0 0.3em 0;
+	border-bottom-right-radius:2em;
+	border-bottom-left-radius:2em;
+	background-color:rgba(0, 0, 0, .8);
+	letter-spacing:2px;
+	white-space:nowrap;
+	width:8.5em;
+	text-align:center;
+}
+
+
+/* Search results in list view */
+.result:nth-child(2n + 1) {
+	background:#E8E8E8;
+}
+
+.result {
+	padding-left:1em;
+	padding-right:1em;
+	padding-top:0.5em;
+	padding-bottom:0.5em;
+}
+
+.result .left {
+	float:left;
+	margin-right:0.5em;
+}
+
+.result img {
+	max-width:7em;
+	max-height:6em;
+}
+
+.result h2 {
+	font-size:1.4em;
+	margin-top:0;
+	margin-bottom:0.2em;
+}
+
+.result h2 img {
+	vertical-align:bottom;
+	margin-left:0.2em;
+}
+
+dl dt {
+	float:left;
+	margin-right:0.3em;
+}
+
+dl dt:after {
+	content:":";
+}
+
+
+/* Styling for map view */
+#search_results_map  {
+	height:100%;
+}
+
+#search_results_map #map {
+	width:100%;
+	height:100%;
+}
+
+#search_results_map {
+	/* We need relative positioning, so that we can reference the
+	children by absolute positioning and get the expected positions */
+	position:relative;
+}
+

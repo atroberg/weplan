@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+<head>
+	<title>WePlan - Travel Destination Finder</title>
+	<meta charset="utf-8" />
+
+	<!-- Optimized for mobile screen -->
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+
+	<!-- Compiled and minified Bootstrap CSS -->
+	<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+
+	<!-- Bootstrap theme -->
+	<link rel="stylesheet" href="lib/bootstrap/css/bootstrap-theme.min.css">
+
+	<!-- We use icons provided by FontAwesome -->
+	<link rel="stylesheet" href="lib/fontawesome/css/font-awesome.min.css">
+
+	<!-- Font-Awesome doesn't include all icons we need, so we provide some ourselves
+	Icons from Glyphicons free: http://glyphicons.com/ -->
+	<link rel="stylesheet" href="css/weplan_icons.css">
+	
+	<!-- This is the CSS styling for the maps we are using (Leaflet) -->
+	<link rel="stylesheet" href="lib/leafletjs/leaflet.css" />
+
+	<!-- Our own css -->
+	<link rel="stylesheet" href="css/weplan.css">
+</head>
+<body>
+	<!-- The search page is the entry point to the application -->
+	<div id="search_page" class="page">
+		<header>
+			<h1>WePlan</h1>
+			<span class="slogan">Travel Destination Finder</span>
+		</header>
+		<div class="row">
+			<label for="departure_from">
+				<span>1</span>
+				Departure from
+				<i class="fa fa-location-arrow"></i>
+			</label>
+			<input type="text" placeholder="Eg. Antibes, France" id="departure_from">
+		</div>
+		<div class="row">
+			<label for="date_start">
+				<span>2</span>
+				When are you traveling?
+				<i class="fa fa-calendar"></i>
+			</label>
+			<input type="date" class="half-width" id="date_start">
+			-
+			<input type="date" class="half-width" id="date_end">
+		</div>
+		<div class="row">
+			<label for="min_budget">
+				<span>3</span>
+				Your budget
+				<i class="fa fa-euro"></i>
+			</label>
+			<input type="number" min="0" class="half-width" placeholder="Min price" id="min_budget">
+			-
+			<input type="number" min="0" class="half-width" placeholder="Max price" id="max_budget">
+		</div>
+		<div class="row">
+			<button type="button" id="search_button" class="btn btn-lg btn-primary"><i class="fa fa-search"></i> Search</button>
+		</div>
+	</div>
+
+	<div id="list_and_map_view_outer_container">
+
+		<div id="list_and_map_view">
+
+			<!-- This is the "swipe handle" for the map view -->
+			<div id="map_view_handle"><span>map view</span></div>
+
+			<!-- Search results page -->
+			<div class="page" id="search_results_list">
+				
+				<header>
+					<button class="back btn btn" type="button">&laquo; Back</button>
+					<h1>Search Results</h1>
+				</header>
+				<div class="result">
+					<h2>Nice, France <img src="images/flags/France.png" alt="Flag of France"></h2>
+					<div class="left">
+						<img src="images/destinations/nice.jpg" alt="Picture of Nice">
+					</div>
+					<div class="facts">
+						<dl>
+							<dt>Weather</dt>
+								<dd class="temperature"><i class="fa fa-sun-o"></i> +23°C</dd>	
+							<dt>Price</dt>
+								<dd class="price">€€€</dd>	
+							<dt>Rating</dt>
+								<dd class="rating">
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+								</dd>
+							<dt>Activities</dt>
+								<dd class="activities">
+									<i class="we-icon we-beach"></i>
+									<i class="fa fa-cutlery"></i>
+									<i class="fa fa-shopping-cart"></i>
+								</dd>
+						</dl>
+					</div>
+				</div>	
+				<div class="result">
+					<h2>Helsinki, Finland <img src="images/flags/Finland.png" alt="Flag of Finland"></h2>
+					<div class="left">
+						<img src="images/destinations/helsinki.jpg" alt="Picture of Helsinki">
+					</div>
+					<div class="facts">
+						<dl>
+							<dt>Weather</dt>
+								<dd class="temperature"><i class="fa fa-cloud"></i> +5°C</dd>	
+							<dt>Price</dt>
+								<dd class="price">€€€</dd>
+							<dt>Rating</dt>
+								<dd class="rating">
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star-half-empty"></i>
+								</dd>
+							<dt>Activities</dt>
+								<dd class="activities">
+									<i class="fa fa-cutlery"></i>
+									<i class="fa fa-shopping-cart"></i>
+									<i class="fa fa-asterisk"></i>
+								</dd>
+						</dl>
+					</div>
+				</div>
+			</div>
+
+			<div class="page" id="search_results_map">
+
+				<!-- This is the "swipe handle" for the map view -->
+				<div id="list_view_handle"><span>list view</span></div>
+
+				<div id="map"></div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- All javascripts are placed here for faster page load -->
+
+	<!-- We use jQuery because it is more easy to work with the DOM using it -->
+	<script type="text/javascript" src="lib/jquery/jquery-2.0.3.min.js"></script>
+
+	<!-- We use Hammer JS for abstracting touch events -->
+	<script type="text/javascript" src="lib/hammerjs/jquery.hammer.min.js"></script>
+
+	<!-- We use LeafjetJS for maps: http://leafletjs.com/ -->
+	<script type="text/javascript" src="lib/leafletjs/leaflet.js"></script>
+	
+	<script type="text/javascript" src="javascript/weplan.js"></script>
+</body>
+</html>
