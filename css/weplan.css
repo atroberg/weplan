@@ -1,12 +1,31 @@
 html,body {
 	width:100%;
 	height:100%;
+	overflow:hidden;
 }
 
 body {
 	font-size:18px;
 	margin:0;
 	padding:0;
+	-webkit-transform:translate(0px,0px);
+	transform:translate(0px,0px);
+	background:url('http://blogs.helsinki.fi/tiedekirjasto-tiedotus/files/2011/09/aurinkoa.jpg');
+	background-size:cover;
+}
+
+/* This is required for the handles to show up
+correctly after the animations (otherwise rendering issues) */
+#map_view_handle, #list_view_handle {
+	-webkit-backface-visibility:hidden;
+}
+
+#main_container {
+	background:white;
+	height:100%;
+	position:relative;
+	-webkit-transition:all .5s;
+	transition:all .5s;
 }
 
 button.back {
@@ -77,13 +96,15 @@ header .slogan {
 #list_and_map_view_outer_container {
 	width:100%;
 	height:100%;
-	overflow:auto;
+	overflow:hidden;
 }
 
 #list_and_map_view {
 	width:200%;
 	height:100%;
 	position:relative;
+	-webkit-transition:all 0.5s;
+	transition:all 0.5s;
 }
 
 #list_and_map_view .page {
@@ -94,12 +115,10 @@ header .slogan {
 }
 
 /* Swipe handles */
-
 #map_view_handle {
 	z-index:10;
-
 	position:absolute;
-	left:50%;
+	left:calc(50% - 10px);
 	top:0;
 	text-transform:uppercase;
 	font-size:1.4em;
@@ -167,6 +186,7 @@ header .slogan {
 }
 
 .result {
+	background:white;
 	padding-left:1em;
 	padding-right:1em;
 	padding-top:0.5em;
@@ -211,7 +231,7 @@ dl dt:after {
 
 #search_results_map #map {
 	width:100%;
-	height:100%;
+	height:calc(100% - 57px);
 }
 
 #search_results_map {
@@ -220,3 +240,6 @@ dl dt:after {
 	position:relative;
 }
 
+#list_and_map_view header {
+	height:57px;
+}
