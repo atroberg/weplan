@@ -28,132 +28,135 @@
 </head>
 <body>
 
+	<!-- We need this container, because we have multiple divs underneath each other,
+		and we want to prevent the user from manually scrolling between the views.
+		We also utilize some animations, that require us to have an additional container. -->
 	<div id="main_container">
 
-	<!-- The search page is the entry point to the application -->
-	<div id="search_page" class="page">
-		<header>
-			<h1>WePlan</h1>
-			<span class="slogan">Travel Destination Finder</span>
-		</header>
-		<div class="row">
-			<label for="departure_from">
-				<span>1</span>
-				Departure from
-				<i class="fa fa-location-arrow"></i>
-			</label>
-			<input type="text" placeholder="Eg. Antibes, France" id="departure_from">
-		</div>
-		<div class="row">
-			<label for="date_start">
-				<span>2</span>
-				When are you traveling?
-				<i class="fa fa-calendar"></i>
-			</label>
-			<input type="date" class="half-width" id="date_start">
-			-
-			<input type="date" class="half-width" id="date_end">
-		</div>
-		<div class="row">
-			<label for="min_budget">
-				<span>3</span>
-				Your budget
-				<i class="fa fa-euro"></i>
-			</label>
-			<input type="number" min="0" class="half-width" placeholder="Min price" id="min_budget">
-			-
-			<input type="number" min="0" class="half-width" placeholder="Max price" id="max_budget">
-		</div>
-		<div class="row">
-			<button type="button" id="search_button" class="btn btn-lg btn-primary"><i class="fa fa-search"></i> Search</button>
-		</div>
-	</div>
-
-	<div id="list_and_map_view_outer_container">
-
-		<div id="list_and_map_view">
-
-			<!-- This is the "swipe handle" for the map view -->
-			<div id="map_view_handle"><span>map view</span></div>
-
-			<!-- Search results page -->
-			<div class="page" id="search_results_list">
-				
-				<header>
-					<button class="back btn btn" type="button">&laquo; Back</button>
-					<h1>Search Results</h1>
-				</header>
-				<div class="result">
-					<h2>Nice, France <img src="images/flags/France.png" alt="Flag of France"></h2>
-					<div class="left">
-						<img src="images/destinations/nice.jpg" alt="Picture of Nice">
-					</div>
-					<div class="facts">
-						<dl>
-							<dt>Weather</dt>
-								<dd class="temperature"><i class="fa fa-sun-o"></i> +23°C</dd>	
-							<dt>Price</dt>
-								<dd class="price">€€€</dd>	
-							<dt>Rating</dt>
-								<dd class="rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-								</dd>
-							<dt>Activities</dt>
-								<dd class="activities">
-									<i class="we-icon we-beach"></i>
-									<i class="fa fa-cutlery"></i>
-									<i class="fa fa-shopping-cart"></i>
-								</dd>
-						</dl>
-					</div>
-				</div>	
-				<div class="result">
-					<h2>Helsinki, Finland <img src="images/flags/Finland.png" alt="Flag of Finland"></h2>
-					<div class="left">
-						<img src="images/destinations/helsinki.jpg" alt="Picture of Helsinki">
-					</div>
-					<div class="facts">
-						<dl>
-							<dt>Weather</dt>
-								<dd class="temperature"><i class="fa fa-cloud"></i> +5°C</dd>	
-							<dt>Price</dt>
-								<dd class="price">€€€</dd>
-							<dt>Rating</dt>
-								<dd class="rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-half-empty"></i>
-								</dd>
-							<dt>Activities</dt>
-								<dd class="activities">
-									<i class="fa fa-cutlery"></i>
-									<i class="fa fa-shopping-cart"></i>
-									<i class="fa fa-asterisk"></i>
-								</dd>
-						</dl>
-					</div>
-				</div>
+		<!-- The search page is the entry point to the application -->
+		<div id="search_page" class="page">
+			<header>
+				<h1>WePlan</h1>
+				<span class="slogan">Travel Destination Finder</span>
+			</header>
+			<div class="row">
+				<label for="departure_from">
+					<span>1</span>
+					Departure from
+					<i class="fa fa-location-arrow"></i>
+				</label>
+				<input type="text" placeholder="Eg. Antibes, France" id="departure_from">
 			</div>
+			<div class="row">
+				<label for="date_start">
+					<span>2</span>
+					When are you traveling?
+					<i class="fa fa-calendar"></i>
+				</label>
+				<input type="date" class="half-width" id="date_start">
+				-
+				<input type="date" class="half-width" id="date_end">
+			</div>
+			<div class="row">
+				<label for="min_budget">
+					<span>3</span>
+					Your budget
+					<i class="fa fa-euro"></i>
+				</label>
+				<input type="number" min="0" class="half-width" placeholder="Min price" id="min_budget">
+				-
+				<input type="number" min="0" class="half-width" placeholder="Max price" id="max_budget">
+			</div>
+			<div class="row">
+				<button type="button" id="search_button" class="btn btn-lg btn-primary"><i class="fa fa-search"></i> Search</button>
+			</div>
+		</div>
 
-			<div class="page" id="search_results_map">
+		<div id="list_and_map_view_outer_container">
+
+			<div id="list_and_map_view">
 
 				<!-- This is the "swipe handle" for the map view -->
-				<div id="list_view_handle"><span>list view</span></div>
+				<div id="map_view_handle"><span>map view</span></div>
 
-				<header>
-					<button class="back btn btn" type="button">&laquo; Back</button>
-					<h1>Search Results</h1>
-				</header>
+				<!-- Search results page -->
+				<div class="page" id="search_results_list">
+					
+					<header>
+						<button class="back btn btn" type="button">&laquo; Back</button>
+						<h1>Search Results</h1>
+					</header>
+					<div class="result">
+						<h2>Nice, France <img src="images/flags/France.png" alt="Flag of France"></h2>
+						<div class="left">
+							<img src="images/destinations/nice.jpg" alt="Picture of Nice">
+						</div>
+						<div class="facts">
+							<dl>
+								<dt>Weather</dt>
+									<dd class="temperature"><i class="fa fa-sun-o"></i> +23°C</dd>	
+								<dt>Price</dt>
+									<dd class="price">€€€</dd>	
+								<dt>Rating</dt>
+									<dd class="rating">
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+									</dd>
+								<dt>Activities</dt>
+									<dd class="activities">
+										<i class="we-icon we-beach"></i>
+										<i class="fa fa-cutlery"></i>
+										<i class="fa fa-shopping-cart"></i>
+									</dd>
+							</dl>
+						</div>
+					</div>	
+					<div class="result">
+						<h2>Helsinki, Finland <img src="images/flags/Finland.png" alt="Flag of Finland"></h2>
+						<div class="left">
+							<img src="images/destinations/helsinki.jpg" alt="Picture of Helsinki">
+						</div>
+						<div class="facts">
+							<dl>
+								<dt>Weather</dt>
+									<dd class="temperature"><i class="fa fa-cloud"></i> +5°C</dd>	
+								<dt>Price</dt>
+									<dd class="price">€€€</dd>
+								<dt>Rating</dt>
+									<dd class="rating">
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star-half-empty"></i>
+									</dd>
+								<dt>Activities</dt>
+									<dd class="activities">
+										<i class="fa fa-cutlery"></i>
+										<i class="fa fa-shopping-cart"></i>
+										<i class="fa fa-asterisk"></i>
+									</dd>
+							</dl>
+						</div>
+					</div>
+				</div>
 
-				<div id="map"></div>
+				<div class="page" id="search_results_map">
+
+					<!-- This is the "swipe handle" for the map view -->
+					<div id="list_view_handle"><span>list view</span></div>
+
+					<header>
+						<button class="back btn btn" type="button">&laquo; Back</button>
+						<h1>Search Results</h1>
+					</header>
+
+					<div id="map"></div>
+
+				</div>
 
 			</div>
 
 		</div>
-
-	</div>
 
 	</div>
 

@@ -10,7 +10,9 @@ body {
 	padding:0;
 	-webkit-transform:translate(0px,0px);
 	transform:translate(0px,0px);
-	background:url('http://blogs.helsinki.fi/tiedekirjasto-tiedotus/files/2011/09/aurinkoa.jpg');
+
+	/* TODO: take similar sunset picture from open source photogallery etc */
+	background:url(../images/body_background.jpg);
 	background-size:cover;
 }
 

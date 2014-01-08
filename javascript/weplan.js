@@ -42,11 +42,11 @@ $('#search_button').hammer().on('tap', function(e) {
 
 	// The animation is much more smooth when using "transform",
 	// compared to modifying for example the "top"-property
-	$('#main_container').css('transform', 'translateY(0px) scale(0.5)');
+	$('#main_container').css('transform', 'translateY(0px) scale(.5)');
 
 	setTimeout(function() {
 		$('#main_container').css('transform', 'translateY('+ resultsPositionTop + 'px) scale(1)');
-	}, 500);
+	}, 400);
 });
 
 $('button.back').hammer().on('tap', function(e) {
@@ -54,5 +54,5 @@ $('button.back').hammer().on('tap', function(e) {
 	$('#main_container').css('transform', 'translateY('+ resultsPositionTop + 'px) scale(.5)');
 	setTimeout(function() {
 		$('#main_container').css('transform', 'translateY(0px) scale(1)');
-	}, 500);
+	}, 400);
 });
