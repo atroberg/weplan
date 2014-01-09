@@ -36,7 +36,10 @@ $('#list_view_handle').hammer({
 
 // Search animation
 var resultsPositionTop;
-$('#search_button').hammer().on('tap', function(e) {
+$('#search_button').hammer({
+	// Prevent scrolling from being misinterpreted as tapping
+	'tap_max_distance': 1
+}).on('tap', function(e) {
 	$('#main_container').css('transform-origin', '50% 0%');
 	resultsPositionTop = -$('#list_and_map_view_outer_container').offset().top;
 
