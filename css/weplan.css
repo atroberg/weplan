@@ -255,13 +255,22 @@ dl dt:after {
 	background:white;
 	z-index:-1;
 	opacity:0;
-	-webkit-transition:opacity .5s;
-	transition:opacity .5s;
+	-webkit-transition:all .5s;
+	transition:all .5s;
+	
+	/* Zoom effect when showing details */
+	-webkit-transform:scale(.1);
+	transform:scale(.1);
+	overflow:hidden;
 }
 
 #details.active {
 	z-index:15;
 	opacity:1;
+
+	/* Zoom effect when showing details */
+	-webkit-transform:scale(1);
+	transform:scale(1);
 }
 
 ul.tabs {
