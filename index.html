@@ -35,40 +35,42 @@
 
 		<!-- The search page is the entry point to the application -->
 		<div id="search_page" class="page">
-			<header>
-				<h1>WePlan</h1>
-				<span class="slogan">Travel Destination Finder</span>
-			</header>
-			<div class="row">
-				<label for="departure_from">
-					<span>1</span>
-					Departure from
-					<i class="fa fa-location-arrow"></i>
-				</label>
-				<input type="text" placeholder="Eg. Antibes, France" id="departure_from">
-			</div>
-			<div class="row">
-				<label for="date_start">
-					<span>2</span>
-					When are you traveling?
-					<i class="fa fa-calendar"></i>
-				</label>
-				<input type="date" class="half-width" id="date_start">
-				-
-				<input type="date" class="half-width" id="date_end">
-			</div>
-			<div class="row">
-				<label for="min_budget">
-					<span>3</span>
-					Your budget
-					<i class="fa fa-euro"></i>
-				</label>
-				<input type="number" min="0" class="half-width" placeholder="Min price" id="min_budget">
-				-
-				<input type="number" min="0" class="half-width" placeholder="Max price" id="max_budget">
-			</div>
-			<div class="row">
-				<button type="button" id="search_button" class="btn btn-lg btn-primary"><i class="fa fa-search"></i> Search</button>
+			<div class="scroll">
+				<header>
+					<h1>WePlan</h1>
+					<span class="slogan">Travel Destination Finder</span>
+				</header>
+				<div class="row">
+					<label for="departure_from">
+						<span>1</span>
+						Departure from
+						<i class="fa fa-location-arrow"></i>
+					</label>
+					<input type="text" placeholder="Eg. Antibes, France" id="departure_from">
+				</div>
+				<div class="row">
+					<label for="date_start">
+						<span>2</span>
+						When are you traveling?
+						<i class="fa fa-calendar"></i>
+					</label>
+					<input type="date" class="half-width" id="date_start">
+					-
+					<input type="date" class="half-width" id="date_end">
+				</div>
+				<div class="row">
+					<label for="min_budget">
+						<span>3</span>
+						Your budget
+						<i class="fa fa-euro"></i>
+					</label>
+					<input type="number" min="0" class="half-width" placeholder="Min price" id="min_budget">
+					-
+					<input type="number" min="0" class="half-width" placeholder="Max price" id="max_budget">
+				</div>
+				<div class="row">
+					<button type="button" id="search_button" class="btn btn-lg btn-primary"><i class="fa fa-search"></i> Search</button>
+				</div>
 			</div>
 		</div>
 

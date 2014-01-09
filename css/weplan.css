@@ -30,6 +30,11 @@ correctly after the animations (otherwise rendering issues) */
 	transition:all .5s;
 }
 
+#search_page .scroll {
+	height:100%;
+	overflow:auto;
+}
+
 button.back {
 	float:left;
 	margin-left:1em;
@@ -60,7 +65,7 @@ header .slogan {
 
 .page {
 	width:100%;
-	min-height:100%;
+	height:100%;
 }
 
 #search_page header {
