@@ -1,39 +1,56 @@
 // Back history management
-var userHasChangedPage = false;
 window.onpopstate = function(e) {
+	if ( e.state == null ) return;
+	onPopState(e.state.page);
+};
 
-	// At least Chrome will fire the popstate on page load, so we need to ensure that
-	// the user has actually navigated somewhere on the page...
-	if ( !userHasChangedPage ) {
-		return;
-	}
+function onPopState(page) {
 
-	// Show first view
-	if ( e.state == null ) {
-		$('#main_container').css('transform-origin', '50% 200%');
-		$('#main_container').css('transform', 'translateY('+ resultsPositionTop + 'px) scale(.5)');
-		setTimeout(function() {
-			$('#main_container').css('transform', 'translateY(0px) scale(1)');
-		}, 400);
-	}
+	switch ( page ) {
 
-	else {
-		switch ( e.state.page ) {
+		case 'Frontpage':
+			$('#main_container').css('transform-origin', '50% 200%');
+			$('#main_container').css('transform', 'translateY('+ resultsPositionTop + 'px) scale(.5)');
+			setTimeout(function() {
+				$('#main_container').css('transform', 'translateY(0px) scale(1)');
+			}, 400);
 
-			// Coming back from details view
-			case 'Results':
+			break;
+
+		// Coming back from details view
+		case 'Results':
+			if ( $('#details').hasClass('active') ) {
 				$('#details').removeClass('active');
-				break;
+			}
 
-		}
+			else {
+				$('#main_container').css('transform-origin', '50% 0%');
+				resultsPositionTop = -$('#list_and_map_view_outer_container').offset().top;
+
+				// The animation is much more smooth when using "transform",
+				// compared to modifying for example the "top"-property
+				$('#main_container').css('transform', 'translateY(0px) scale(.5)');
+
+				setTimeout(function() {
+					$('#main_container').css('transform', 'translateY('+ resultsPositionTop + 'px) scale(1)');
+				}, 400);
+			}
+
+			break;
+
+		case 'Details':
+			$('#details').addClass('active');
+
+			break;
+
 	}
 
 };
 
 function addHistory(page) {
-	userHasChangedPage = true;
 	window.history.pushState({page:page}, page);
 }
+addHistory("Frontpage");
 
 
 // This is just for testing, to display more results in the list view
@@ -78,19 +95,9 @@ $('#search_button').hammer({
 	// Prevent scrolling from being misinterpreted as tapping
 	'tap_max_distance': 1
 }).on('tap', function(e) {
-	$('#main_container').css('transform-origin', '50% 0%');
-	resultsPositionTop = -$('#list_and_map_view_outer_container').offset().top;
-
-	// The animation is much more smooth when using "transform",
-	// compared to modifying for example the "top"-property
-	$('#main_container').css('transform', 'translateY(0px) scale(.5)');
-
-	setTimeout(function() {
-		$('#main_container').css('transform', 'translateY('+ resultsPositionTop + 'px) scale(1)');
-	}, 400);
-
 	// Back history
 	addHistory("Results");
+	onPopState("Results");
 });
 
 $('button.back').hammer().on('tap', function(e) {
@@ -99,10 +106,10 @@ $('button.back').hammer().on('tap', function(e) {
 
 // Show details view when clicking result
 $('.result').hammer().on('tap', function(e) {
-	$('#details').addClass('active');
-
 	// Back history
 	addHistory("Details");
+
+	onPopState("Details");
 });
 
 
