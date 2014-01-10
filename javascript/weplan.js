@@ -1,3 +1,41 @@
+// Back history management
+var userHasChangedPage = false;
+window.onpopstate = function(e) {
+
+	// At least Chrome will fire the popstate on page load, so we need to ensure that
+	// the user has actually navigated somewhere on the page...
+	if ( !userHasChangedPage ) {
+		return;
+	}
+
+	// Show first view
+	if ( e.state == null ) {
+		$('#main_container').css('transform-origin', '50% 200%');
+		$('#main_container').css('transform', 'translateY('+ resultsPositionTop + 'px) scale(.5)');
+		setTimeout(function() {
+			$('#main_container').css('transform', 'translateY(0px) scale(1)');
+		}, 400);
+	}
+
+	else {
+		switch ( e.state.page ) {
+
+			// Coming back from details view
+			case 'Results':
+				$('#details').removeClass('active');
+				break;
+
+		}
+	}
+
+};
+
+function addHistory(page) {
+	userHasChangedPage = true;
+	window.history.pushState({page:page}, page);
+}
+
+
 // This is just for testing, to display more results in the list view
 $('#search_results_list div.result').each(function() {
 	var repeat = 2;
@@ -50,26 +88,21 @@ $('#search_button').hammer({
 	setTimeout(function() {
 		$('#main_container').css('transform', 'translateY('+ resultsPositionTop + 'px) scale(1)');
 	}, 400);
+
+	// Back history
+	addHistory("Results");
 });
 
 $('button.back').hammer().on('tap', function(e) {
-	// Check if details view is visible => close it
-	if ( $('#details').hasClass('active') ) {
-		$('#details').removeClass('active');
-	}
-
-	else {
-		$('#main_container').css('transform-origin', '50% 200%');
-		$('#main_container').css('transform', 'translateY('+ resultsPositionTop + 'px) scale(.5)');
-		setTimeout(function() {
-			$('#main_container').css('transform', 'translateY(0px) scale(1)');
-		}, 400);
-	}
+	window.history.back();
 });
 
 // Show details view when clicking result
 $('.result').hammer().on('tap', function(e) {
 	$('#details').addClass('active');
+
+	// Back history
+	addHistory("Details");
 });
 
 
