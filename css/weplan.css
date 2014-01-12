@@ -339,7 +339,7 @@ ul.tabs li.active {
 }
 
 
-#filter {
+#filter, #sort {
 	position:absolute;
 	height:100%;
 	width:100%;
@@ -360,7 +360,7 @@ ul.tabs li.active {
 	overflow:hidden;
 }
 
-#filter.active {
+#filter.active, #sort.active {
 	z-index:15;
 	visibility:visible;
 	opacity:1;
@@ -370,13 +370,8 @@ ul.tabs li.active {
 	transform:scale(1);
 }
 
-#filter header h2 {
+#filter header h2, #sort header h2 {
 	margin:0;
-}
-
-#filter header h2 button {
-	float:right;
-	margin-right:1em;
 }
 
 .range_slider {
@@ -430,7 +425,7 @@ ul.tabs li.active {
 	padding:1.5em 0;
 }
 
-.filter_row:nth-child(2n) {
+.filter_row:nth-child(2n), #sort ul li:nth-child(2n) {
 	background:#E8E8E8;
 }
 
@@ -462,8 +457,8 @@ ul.tabs li.active {
 	font-size:1.1em;
 }
 
-/* Make sure scrolling works for filter view */
-#filter > div {
+/* Make sure scrolling works */
+#filter > div, #sort > div {
 	overflow:auto;
 	height:100%;
 	padding-bottom:2.7em;
@@ -480,4 +475,21 @@ div.done {
 div.done button.back {
 	float:none;
 	margin-left:0;
+}
+
+#sort div {
+	text-align:center;
+}
+
+#sort ul {
+	margin:0;
+	padding:0;
+}
+
+#sort ul li {
+	list-style-type:none;
+	padding:0.7em 0;
+	display:block;
+	width:100%;
+	text-align:center;
 }

@@ -88,7 +88,7 @@
 						<button class="back btn" type="button">&laquo; Back</button>
 						<h1>12 results</h1>
 						<button class="btn btn-primary filter"><i class="fa fa-filter"></i> Filter</button>
-						<button class="btn btn-primary"><i class="fa fa-retweet"></i> Sort</button>
+						<button class="btn btn-primary sort"><i class="fa fa-retweet"></i> Sort</button>
 					</header>
 					<div class="result">
 						<h2>Nice, France <img src="images/flags/France.png" alt="Flag of France"></h2>
@@ -175,10 +175,7 @@
 	<!-- Filter popup -->
 	<div id="filter">
 		<header>
-			<h2>
-				Filter (12 matches)
-				<button class="btn back"><i class="fa fa-times"></i> Close</button>
-			</h2>
+			<h2>Filter (12 matches)</h2>
 		</header>
 		<div>
 			<div class="filter_row">
@@ -250,6 +247,23 @@
 			<div class="done">
 				<button class="btn back btn-primary"><i class="fa fa-check"></i> Done</button>
 			</div>
+		</div>
+	</div>
+
+	<!-- Sort popup -->
+	<div id="sort">
+		<header>
+			<h2>Sort</h2>
+		</header>
+		<div>
+			<ul>
+				<li><i class="fa fa-check"></i> Alphabetical <i class="fa fa-sort-alpha-asc"></i></li>
+				<li>Alphabetical <i class="fa fa-sort-alpha-desc"></i></li>
+				<li>Price <i class="fa fa-sort-numeric-asc"></i></li>
+				<li>Price <i class="fa fa-sort-numeric-desc"></i></li>
+				<li>Temperature <i class="fa fa-sort-amount-asc"></i></li>
+				<li>Temperature <i class="fa fa-sort-amount-desc"></i></li>
+			</ul>
 		</div>
 	</div>
 

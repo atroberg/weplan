@@ -27,6 +27,10 @@ function onPopState(page) {
 				$('#filter').removeClass('active');
 			}
 
+			else if ( $('#sort').hasClass('active') ) {
+				$('#sort').removeClass('active');
+			}
+
 			else {
 				$('#main_container').css('transform-origin', '50% 0%');
 				resultsPositionTop = -$('#list_and_map_view_outer_container').offset().top;
@@ -50,6 +54,10 @@ function onPopState(page) {
 		case 'Filter':
 			$('#filter').addClass('active');	
 			initializeFilterSliders();
+			break;
+
+		case 'Sort':
+			$('#sort').addClass('active');	
 			break;
 
 	}
@@ -203,10 +211,15 @@ $('#details_container').hammer({
 });
 
 
-// Filter and Sort view
+// Open filter view
 $('button.filter').hammer().on('tap', function(e) {
 	addHistory("Filter");
 	onPopState("Filter");
+});
+// Open sort view
+$('button.sort').hammer().on('tap', function(e) {
+	addHistory("Sort");
+	onPopState("Sort");
 });
 
 // Initialize the range sliders
