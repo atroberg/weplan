@@ -64,9 +64,7 @@
 						Your budget
 						<i class="fa fa-euro"></i>
 					</label>
-					<input type="number" min="0" class="half-width" placeholder="Min price" id="min_budget">
-					-
-					<input type="number" min="0" class="half-width" placeholder="Max price" id="max_budget">
+					<input type="number" min="0" placeholder="Max price" id="max_budget">
 				</div>
 				<div class="row">
 					<button type="button" id="search_button" class="btn btn-lg btn-primary"><i class="fa fa-search"></i> Search</button>
@@ -90,10 +88,10 @@
 						<button class="btn btn-primary filter"><i class="fa fa-filter"></i> Filter</button>
 						<button class="btn btn-primary sort"><i class="fa fa-retweet"></i> Sort</button>
 					</header>
-					<div class="result">
-						<h2>Nice, France <img src="images/flags/France.png" alt="Flag of France"></h2>
+					<div class="result" id="list_template">
+						<h2><span>Nice, France</span> <img src="images/flags/France.png" alt="Flag"></h2>
 						<div class="left">
-							<img src="images/destinations/nice.jpg" alt="Picture of Nice">
+							<img src="images/destinations/nice.jpg" alt="Picture of the destination">
 						</div>
 						<div class="facts">
 							<dl>
@@ -303,6 +301,10 @@
 	<!-- We use LeafjetJS for maps: http://leafletjs.com/ -->
 	<script type="text/javascript" src="lib/leafletjs/leaflet.js"></script>
 	
+	<!-- All weplan specific logic is here -->
 	<script type="text/javascript" src="javascript/weplan.js"></script>
+
+	<!-- Test data of travel destinations that we are using -->
+	<script type="text/javascript" src="data/destinations_v2.js"></script>
 </body>
 </html>

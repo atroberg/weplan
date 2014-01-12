@@ -188,7 +188,7 @@ header .slogan {
 
 
 /* Search results in list view */
-.result:nth-child(2n + 1) {
+.result:nth-child(2n) {
 	background:#E8E8E8;
 }
 
@@ -492,4 +492,8 @@ div.done button.back {
 	display:block;
 	width:100%;
 	text-align:center;
+}
+
+#list_template {
+	display:none;
 }

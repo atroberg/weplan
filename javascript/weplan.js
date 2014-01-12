@@ -70,17 +70,6 @@ function addHistory(page) {
 addHistory("Frontpage");
 
 
-// This is just for testing, to display more results in the list view
-$('#search_results_list div.result').each(function() {
-	var repeat = 2;
-	var el = $(this);
-
-	for ( var i = 0; i < repeat; i ++ ) {
-		var clone = el.clone();
-		clone.appendTo($('#search_results_list'));
-	}
-});
-
 // Initialize the map
 var map = L.map('map').setView([64.886265, 29.047852], 4);
 L.tileLayer('http://mtile03.mqcdn.com/tiles/1.0.0/vy/map/{z}/{x}/{y}.png', {
@@ -94,6 +83,7 @@ function windowScrollTop(position) {
 	});
 }
 
+
 // Switching between list and map view
 $('#map_view_handle').hammer({
 	'swipe_velocity': 0.1
@@ -106,7 +96,68 @@ $('#list_view_handle').hammer({
 	$('#list_and_map_view').css('transform', 'translateX(0px)');
 });
 
-// Search animation
+
+// A global variable for holding the currently active
+// destination in the details view
+var destinationInDetailsView;
+
+// Add destination to search results
+function showDestination(destination, listIndex) {
+	var result = $('#list_template').clone().removeAttr('id').attr('data-list-index', listIndex);
+
+	// Show details view when clicking result
+	result.hammer().on('tap', function(e) {
+		// Update details view with the right contents
+		destinationInDetailsView = destinations[listIndex];
+		
+		// Back history
+		addHistory("Details");
+		onPopState("Details");
+	});
+
+	result.find('h2 span').html(destination.city + ', ' + destination.country);
+	result.find('h2 img').attr('src', 'images/flags/' + destination.country + '.png');
+
+	if ( destination.photos && destination.photos.length > 0 ) {
+		result.find('.left img').attr('src', destination.photos[0]);
+	}
+
+	// Randomize weather icon
+	var icons = ['fa-sun-o', 'fa-cloud'];
+	var temperature = Math.round(destination.temperature);
+	if ( temperature > 0 ) temperature = '+' + temperature;
+	result.find('.temperature').html('<i class="fa ' + icons[Math.floor(Math.random()*icons.length)] + '"></i> ' + temperature + '°C');
+
+	// Show random rating (0.5 - 3)
+	var rating = (0.0 + (1 + Math.floor(Math.random() * 5 + 1))) / 2.0;
+	var ratingEl = result.find('.rating').html('');
+	result.attr('data-rating', rating);
+	for ( var i = 0; i < rating; i ++ ) {
+		if ( rating - i >= 1 ) {
+			var icon = "fa-star";
+		}
+		else {
+			var icon = "fa-star-half";
+		}
+		ratingEl.append('<i class="fa ' + icon + '"></i>');
+	}
+
+	// Show random price (that matches the search value)
+	var price = destination.price * 500 + Math.floor(Math.random()*500);
+	result.find('.price').html(price + '€');	
+	result.attr('data-price', price);
+
+	// Activities
+	var activities = ['we-icon we-beach', 'fa fa-cutlery', 'fa fa-beer', 'fa fa-music', 'fa fa-shopping-cart', 'fa fa-asterisk'];
+	var activitiesEl = result.find('.activities').html('');
+	for ( var i = 0; i < destination.activities.length; i ++ ) {
+		activitiesEl.append('<i class="' + activities[destination.activities[i]] + '"></i> ');
+	}
+
+	result.appendTo($('#search_results_list'));
+}
+
+// Search
 var resultsPositionTop;
 $('#search_button').hammer({
 	// Prevent scrolling from being misinterpreted as tapping
@@ -115,18 +166,31 @@ $('#search_button').hammer({
 	// Back history
 	addHistory("Results");
 	onPopState("Results");
+
+	// Clear previous results
+	$('#search_results_list .result:not(#list_template)').remove();
+
+	// Search through the test data
+	var maxBudget = parseFloat($('#max_budget').val());
+
+	for ( var i = 0; i < destinations.length; i ++ ) {
+		var destination = destinations[i];
+
+		// Price class is indicated by an integer 0-2
+		// 0: 0€ - 500€
+		// 1: 501€ - 1000€
+		// 2: 1001€ -
+		if ( ( maxBudget <= 500 && destination.price == 0 )
+			|| ( maxBudget >= 501 && maxBudget <= 1000 && $.inArray(destination.price, [0, 1]) != -1 )
+			|| ( maxBudget >= 1001 ) ) {
+			
+			showDestination(destination, i);
+		}
+	}		
 });
 
 $('button.back').hammer().on('tap', function(e) {
 	window.history.back();
-});
-
-// Show details view when clicking result
-$('.result').hammer().on('tap', function(e) {
-	// Back history
-	addHistory("Details");
-
-	onPopState("Details");
 });
 
 
@@ -161,43 +225,37 @@ function showTab(index) {
 	
 	var tab = detailsContainer.find('.tab:eq(' + currentActiveTab + ')');
 
-	if ( tab.attr('data-initialized') != "true" ) {
+	switch ( currentActiveTab ) {
 
-		tab.attr('data-initialized', 'true');
+		default:
+			// By default we don't need to do anything
+			break;
 
-		switch ( currentActiveTab ) {
+		// Photos
+		case 1:
+			// Fetch images from Google image search
+			$.ajax({
+				'url': 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0',
+				'type': 'GET',
+				'data': {
+					'q': destinationInDetailsView.city + ', ' + destinationInDetailsView.country,
+					'imgsz': 'medium|large',
+					'rsz': 8 // results per page
+				},
+				'dataType': 'jsonp',
+				'success': function(data) {
+					// Remove loading msg
+					tab.html('');
 
-			default:
-				// By default we don't need to do anything
-				break;
-
-			// Photos
-			case 1:
-				// Fetch images from Google image search
-				$.ajax({
-					'url': 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0',
-					'type': 'GET',
-					'data': {
-						'q': 'Nice, France',
-						'imgsz': 'medium|large',
-						'rsz': 8 // results per page
-					},
-					'dataType': 'jsonp',
-					'success': function(data) {
-						// Remove loading msg
-						tab.html('');
-
-						for( var i = 0; i < data.responseData.results.length; i ++ ) {
-							var result = data.responseData.results[i];
-		
-							var img = $('<div />').css('background-image', 'url("' + result.url + '")');
-							tab.append(img);
-						}
+					for( var i = 0; i < data.responseData.results.length; i ++ ) {
+						var result = data.responseData.results[i];
+	
+						var img = $('<div />').css('background-image', 'url("' + result.url + '")');
+						tab.append(img);
 					}
-				});
-				break;
-		}
-
+				}
+			});
+			break;
 	}
 }
 
