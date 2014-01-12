@@ -86,7 +86,9 @@
 					
 					<header>
 						<button class="back btn" type="button">&laquo; Back</button>
-						<h1>Search Results</h1>
+						<h1>12 results</h1>
+						<button class="btn btn-primary filter"><i class="fa fa-filter"></i> Filter</button>
+						<button class="btn btn-primary"><i class="fa fa-retweet"></i> Sort</button>
 					</header>
 					<div class="result">
 						<h2>Nice, France <img src="images/flags/France.png" alt="Flag of France"></h2>
@@ -149,7 +151,10 @@
 
 					<header>
 						<button class="back btn" type="button">&laquo; Back</button>
-						<h1>Search Results</h1>
+						<h1>
+							12 results
+							<button class="btn btn-primary filter"><i class="fa fa-filter"></i> Filter</button>
+						</h1>
 					</header>
 
 					<div id="map"></div>
@@ -165,6 +170,87 @@
 	<!-- Favorites div -->
 	<div id="favorites">
 
+	</div>
+
+	<!-- Filter popup -->
+	<div id="filter">
+		<header>
+			<h2>
+				Filter (12 matches)
+				<button class="btn back"><i class="fa fa-times"></i> Close</button>
+			</h2>
+		</header>
+		<div>
+			<div class="filter_row">
+				<label>Price</label>
+				<div class="range_slider" data-min="10" data-max="100" data-unit="€"></div>
+			</div>
+			<div class="filter_row">
+				<label>Temperature</label>
+				<div class="range_slider" data-min="10" data-max="100" data-unit="°C"></div>
+			</div>
+			<div class="filter_row checkboxes">
+				<label>Continents</label>
+				<div class="checkboxes">
+					<label class="checkbox" for="Africa">
+						<input checked type="checkbox" id="Africa">
+						Africa
+					</label>
+					<label class="checkbox" for="Asia">
+						<input checked type="checkbox" id="Asia">
+						Asia
+					</label>
+					<label class="checkbox" for="Australia">
+						<input checked type="checkbox" id="Australia">
+						Australia
+					</label>
+					<label class="checkbox" for="Europe">
+						<input checked type="checkbox" id="Europe">
+						Europe
+					</label>
+					<label class="checkbox" for="NorthAmerica">
+						<input checked type="checkbox" id="NorthAmerica">
+						North America
+					</label>
+					<label class="checkbox" for="SouthAmerica">
+						<input checked type="checkbox" id="SouthAmerica">
+						South America
+					</label>
+				</div>
+			</div>
+			<div class="filter_row checkboxes">
+				<label>Activities</label>
+				<div class="checkboxes">
+					<label class="checkbox" for="Beach">
+						<input checked type="checkbox" id="Beach">
+						<i class="we-icon we-beach"></i> Beach
+					</label>
+					<label class="checkbox" for="Dining">
+						<input checked type="checkbox" id="Dining">
+						<i class="fa fa-cutlery"></i> Dining
+					</label>
+					<label class="checkbox" for="Nightlife">
+						<input checked type="checkbox" id="Nightlife">
+						<i class="fa fa-beer"></i> Nightlife
+					</label>
+					<label class="checkbox" for="Music">
+						<input checked type="checkbox" id="Music">
+						<i class="fa fa-music"></i> Music
+					</label>
+					<label class="checkbox" for="Shopping">
+						<input checked type="checkbox" id="Shopping">
+						<i class="fa fa-shopping-cart"></i> Shopping
+					</label>
+					<label class="checkbox" for="WinterSports">
+						<input checked type="checkbox" id="WinterSports">
+						<i class="fa fa-asterisk"></i> Winter Sports
+					</label>
+				</div>
+			</div>
+			<div class="done">
+				<button class="btn back btn-primary"><i class="fa fa-check"></i> Done</button>
+			</div>
+		</div>
 	</div>
 
 	<!-- Details view of a destination -->

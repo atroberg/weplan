@@ -23,6 +23,10 @@ function onPopState(page) {
 				$('#details').removeClass('active');
 			}
 
+			else if ( $('#filter').hasClass('active') ) {
+				$('#filter').removeClass('active');
+			}
+
 			else {
 				$('#main_container').css('transform-origin', '50% 0%');
 				resultsPositionTop = -$('#list_and_map_view_outer_container').offset().top;
@@ -41,6 +45,11 @@ function onPopState(page) {
 		case 'Details':
 			$('#details').addClass('active');
 
+			break;
+
+		case 'Filter':
+			$('#filter').addClass('active');	
+			initializeFilterSliders();
 			break;
 
 	}
@@ -184,6 +193,7 @@ function showTab(index) {
 	}
 }
 
+// Swiping between tabs
 $('#details_container').hammer({
 	'swipe_velocity': 0.1
 }).on('swipeleft', function() {
@@ -191,3 +201,89 @@ $('#details_container').hammer({
 }).on('swiperight', function() {
 	showTab(currentActiveTab - 1);
 });
+
+
+// Filter and Sort view
+$('button.filter').hammer().on('tap', function(e) {
+	addHistory("Filter");
+	onPopState("Filter");
+});
+
+// Initialize the range sliders
+var filterSlidersInitialized = false;
+function initializeFilterSliders() {
+
+	if ( filterSlidersInitialized ) return;
+
+	filterSlidersInitialized = true;
+
+	$('.range_slider').each(function() {
+		var el = $(this);
+		el.append('<div><span class="low"><span>10€</span></span><span class="high"><span>100€</span></span></div>');
+		
+		var fullWidth = el.width();
+		var innerDiv = el.find('> div:first');
+		innerDiv.css('width', fullWidth + 'px');
+
+		// We need to keep track of the handle positions
+		var lastPointLow = 0;
+		var lastPointHigh = fullWidth;
+	
+		var handleWidth = 21;
+
+		var minValue = parseInt(el.attr('data-min'));
+		var maxValue = parseInt(el.attr('data-max'));
+		var unit = el.attr('data-unit');
+
+		// Dragging of the low handle
+		el.find('.low').hammer({
+			'drag_min_distance': 1,
+			'prevent_default': true
+		}).on('drag', function(e) {
+			var delta = e.gesture.deltaX;
+
+			var leftPos = lastPointLow + delta;
+		
+			// Prevent from dragging too far left & right	
+			if ( leftPos < 0 ) leftPos = 0;
+			else if ( leftPos > lastPointHigh - handleWidth ) leftPos = lastPointHigh - handleWidth;
+
+			// Calculate the value
+			var ratio = leftPos / (fullWidth - handleWidth);
+			var value = Math.round(minValue + ratio * (maxValue - minValue));
+			$(this).find('span').html(value + unit);
+
+			innerDiv.css({
+				'left': leftPos + 'px',
+				'width': lastPointHigh - leftPos + 'px'
+			});
+		}).on('dragend', function(e) {
+			lastPointLow = parseFloat(innerDiv.css('left').replace('px',''));
+		});
+
+		// Dragging of the high handle
+		el.find('.high').hammer({
+			'drag_min_distance': 1,
+			'prevent_default': true
+		}).on('drag', function(e) {
+			var delta = e.gesture.deltaX;
+
+			var width = lastPointHigh + delta;
+
+			// Prevent from dragging too far left & right	
+			if ( width < handleWidth + lastPointLow ) width = handleWidth + lastPointLow;
+			else if ( width > fullWidth ) width = fullWidth;
+	
+			// Calculate the value
+			var ratio = (width - handleWidth) / (fullWidth - handleWidth);
+			var value = Math.round(minValue + ratio * (maxValue - minValue));
+			$(this).find('span').html(value + unit);
+
+			innerDiv.css({
+				'width': width - lastPointLow + 'px'
+			});
+		}).on('dragend', function(e) {
+			lastPointHigh = parseFloat(innerDiv.css('width').replace('px','')) + lastPointLow;
+		});
+	});
+}

@@ -248,7 +248,17 @@ dl dt:after {
 }
 
 #list_and_map_view header {
-	height:57px;
+	padding-bottom:0.3em;
+}
+
+#search_results_map header button {
+	margin-bottom:0.4em;
+	margin-left:0.5em;
+}
+
+#search_results_list header button {
+	margin-right:1em;
+	margin-top:0.2em;
 }
 
 #details {
@@ -326,4 +336,148 @@ ul.tabs li.active {
 .tab.photos p {
 	text-align:center;
 	margin:2em 0;
+}
+
+
+#filter {
+	position:absolute;
+	height:100%;
+	width:100%;
+	top:0;
+	left:0;
+	visibility:hidden;
+	z-index:-1;
+	opacity:0;
+
+	/* Zoom effect */
+	-webkit-transform:scale(.1);
+	transform:scale(.1);
+
+	-webkit-transition:all .5s;
+	transition:all .5s;
+
+	background:white;
+	overflow:hidden;
+}
+
+#filter.active {
+	z-index:15;
+	visibility:visible;
+	opacity:1;
+
+	/* Zoom effect */
+	-webkit-transform:scale(1);
+	transform:scale(1);
+}
+
+#filter header h2 {
+	margin:0;
+}
+
+#filter header h2 button {
+	float:right;
+	margin-right:1em;
+}
+
+.range_slider {
+	width:90%;
+	margin:auto;
+	margin-top:2em;
+	border:1px solid gray;
+	background:#E8E8E8;
+}
+
+.range_slider div {
+	width:100%;
+	height:0.7em;
+	background:#39b3d7;
+	position:relative;
+}
+
+.range_slider div > span {
+	display:block;
+	position:absolute;
+	top:-0.4em;
+	height:1.5em;
+	width:1.5em;
+	background:#F8F8F8;
+	border:1px solid gray;
+	border-radius:1.5em;
+}
+
+.range_slider .low {
+	left:-3px;
+}
+
+.range_slider .high {
+	right:-3px;
+}
+
+.range_slider span span {
+	position:relative;
+	bottom:2em;
+	display:block;
+	color:white;
+	width:3em;
+	right:0.8em;
+	text-align:center;
+	background:url(../images/slider_bg.png) no-repeat;
+	background-size:contain;
+	height:2em;
+}
+
+.filter_row {
+	padding:1.5em 0;
+}
+
+.filter_row:nth-child(2n) {
+	background:#E8E8E8;
+}
+
+.filter_row > label:first-child {
+	display:block;
+	text-align:center;
+	font-size:1.5em;
+	text-transform:uppercase;
+}
+
+.filter_row input[type="checkbox"] {
+	min-width:1.2em;
+	min-height:1.2em;
+	vertical-align:sub;
+	float:none;
+}
+
+.filter_row.checkboxes {
+	text-align:center;
+}
+
+.filter_row .checkboxes {
+	display:inline-block;
+	text-align:left;
+}
+
+.filter_row .checkboxes label {
+	margin-bottom:.5em;
+	font-size:1.1em;
+}
+
+/* Make sure scrolling works for filter view */
+#filter > div {
+	overflow:auto;
+	height:100%;
+	padding-bottom:2.7em;
+}
+
+div.done {
+	background:#39b3d7;
+	padding-top:1em;
+	padding-bottom:1em;
+	text-align:center;
+}
+
+/* Have to override some styling */
+div.done button.back {
+	float:none;
+	margin-left:0;
 }
