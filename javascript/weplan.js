@@ -109,6 +109,9 @@ function onPopState(page) {
 
 				if ( favoritesFound ) {
 					$('#favorites p.no_favorites').addClass('hidden');
+
+					// Different background for every other row
+					$('#favorites .result:odd').addClass('odd');
 				}
 				else {
 					$('#favorites p.no_favorites').removeClass('hidden');
@@ -314,6 +317,10 @@ function showDestination(destination, listIndex, isFavorited, addToFavoritesView
 					}
 
 					$(this).remove();
+
+					// Different background for every other row
+					$('#favorites .result').removeClass('odd');
+					$('#favorites .result:odd').addClass('odd');
 				});
 			}
 		}
