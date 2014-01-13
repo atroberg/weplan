@@ -27,6 +27,13 @@ function onPopState(page) {
 		case 'Results':
 			if ( $('#details').hasClass('active') ) {
 				$('#details').removeClass('active');
+				
+				// Reset details view photos
+				setTimeout(function() {
+					showTab(0);
+					$('#details .tab.photos *:not(.loading)').remove();
+					$('#details .tab.photos .loading').removeClass('hidden');
+				}, 500);
 			}
 
 			else if ( $('#filter').hasClass('active') ) {
@@ -70,12 +77,20 @@ function onPopState(page) {
 
 			if ( $('#details').hasClass('active') ) {
 				$('#details').removeClass('active');
+				
+				// Reset details view photos
+				setTimeout(function() {
+					showTab(0);
+					$('#details .tab.photos *:not(.loading)').remove();
+					$('#details .tab.photos .loading').removeClass('hidden');
+				}, 500);
 			}
 
 			$('#favorites').addClass('active');
 
 			// Get favorites from localStorage
 			var favorites = JSON.parse(localStorage.getItem("favorites"));
+			if ( favorites == null ) favorites = {};
 
 			var favoritesFound = false;
 
@@ -407,6 +422,7 @@ $('#search_button').hammer({
 
 		// Get favorites from localStorage
 		var favorites = JSON.parse(localStorage.getItem("favorites"));
+		if ( favorites == null ) favorites = {};
 
 		for ( var i = 0; i < destinations.length; i ++ ) {
 			var destination = destinations[i];
@@ -482,7 +498,7 @@ tabMenu.find('li').hammer().on('tap', function() {
 
 function showTab(index) {
 
-	// Check tab exists
+	// Check that tab exists
 	if ( index < 0 || index > detailsContainer.find('.tab').length - 1 ) {
 		return;
 	}
@@ -495,18 +511,13 @@ function showTab(index) {
 	var value = -(index * 25) + '%';
 	detailsContainer.css('transform', 'translateX('+value+')');
 
-	// Check if we need to initialize tab with some content
-	
 	var tab = detailsContainer.find('.tab:eq(' + currentActiveTab + ')');
 
 	switch ( currentActiveTab ) {
 
-		default:
-			// By default we don't need to do anything
-			break;
-
 		// Photos
 		case 1:
+
 			// Fetch images from Google image search
 			$.ajax({
 				'url': 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0',
@@ -519,7 +530,7 @@ function showTab(index) {
 				'dataType': 'jsonp',
 				'success': function(data) {
 					// Remove loading msg
-					tab.html('');
+					tab.find('.loading').addClass('hidden');
 
 					for( var i = 0; i < data.responseData.results.length; i ++ ) {
 						var result = data.responseData.results[i];
@@ -527,6 +538,9 @@ function showTab(index) {
 						var img = $('<div />').css('background-image', 'url("' + result.url + '")');
 						tab.append(img);
 					}
+				},
+				'error': function() {
+					alert("There was a problem fetching photos from Google. Try again.");
 				}
 			});
 			break;

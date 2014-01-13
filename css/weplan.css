@@ -336,6 +336,10 @@ body #details {
 	float:left;
 }
 
+.tab.photos .loading.hidden {
+	display:none;
+}
+
 .tab.video {
 	padding-top:1em;
 }
@@ -586,4 +590,8 @@ div.done button.back {
 #favorites .page {
 	overflow:auto;
 	padding-bottom:2em;
+}
+
+.tab.tickets {
+	padding:1em;
 }
