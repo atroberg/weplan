@@ -355,7 +355,7 @@ ul.tabs li.active {
 }
 
 .tab.video {
-	padding-top:1em;
+	text-align:center;
 }
 
 /* Make height equal width, credits: http://www.mademyday.de/css-height-equals-width-with-pure-css.html */
