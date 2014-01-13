@@ -112,7 +112,7 @@ function showDetails(listIndex) {
 	// Update the video tab
 	var videoUrl = $.trim(destinationInDetailsView.videos[0]);
 
-	detailsEl.find('#details_container .video').html("<video controls src=\"" + videoUrl + "\">Video of " + destinationInDetailsView.city + ", " + destinationInDetailsView.country + "</video>");
+	detailsEl.find('#details_container .video').html("<video width=\"400\" height=\"400\" controls=\"controls\"><source src=\"http://ia600302.us.archive.org/5/items/20101119-00h07m59s/20101119-00h07m59s_512kb.mp4\" type=\"video/mp4\" /><source src=\"http://ia600302.us.archive.org/5/items/20101119-00h07m59s/20101119-00h07m59s.ogv\" type=\"video/ogg\" />This is a Chinese report</video>");
 	
 	// Back history
 	addHistory("Details");
