@@ -1,6 +1,7 @@
 // Back history management
 window.onpopstate = function(e) {
 	if ( e.state == null ) return;
+	if ( e.state.page == "Results" ) $('#details').find('#details_container .video').html(videoHtml);
 	onPopState(e.state.page);
 };
 
@@ -165,7 +166,9 @@ function showDetails(listIndex) {
 
 	// Update the video tab
 
-	detailsEl.find('#details_container .video').html("<video width=\"400\" height=\"400\" controls=\"controls\"><source src=\"http://ia600302.us.archive.org/5/items/20101119-00h07m59s/20101119-00h07m59s_512kb.mp4\" type=\"video/mp4\" /><source src=\"http://ia600302.us.archive.org/5/items/20101119-00h07m59s/20101119-00h07m59s.ogv\" type=\"video/ogg\" />This is a Chinese report</video>");
+	videoHtml= "<video width=\"400\" height=\"400\" controls=\"controls\"><source src=\"http://ia600302.us.archive.org/5/items/20101119-00h07m59s/20101119-00h07m59s_512kb.mp4\" type=\"video/mp4\" id=\"video\" /><source src=\"http://ia600302.us.archive.org/5/items/20101119-00h07m59s/20101119-00h07m59s.ogv\" type=\"video/ogg\" />This is a Chinese report</video>"
+
+	detailsEl.find('#details_container .video').html(videoHtml);
 	
 	// Back history
 	addHistory("Details");
@@ -175,6 +178,8 @@ function showDetails(listIndex) {
 // A global variable for holding the currently active
 // destination in the details view
 var destinationInDetailsView;
+
+var videoHtml;
 
 // Add destination to search results
 var destinationsToAddToDom = [];
@@ -505,6 +510,9 @@ var detailsContainer = $('#details_container');
 var tabMenu = $('#details ul.tabs');
 
 tabMenu.find('li').hammer().on('tap', function() {
+	if(currentActiveTab==2) {
+		$('#details').find('#details_container .video').html(videoHtml);
+	}
 	showTab($(this).index());
 });
 
@@ -563,11 +571,16 @@ function showTab(index) {
 $('#details_container').hammer({
 	'swipe_velocity': 0.1
 }).on('swipeleft', function() {
+	if(currentActiveTab==2) {
+		$('#details').find('#details_container .video').html(videoHtml);
+	}
 	showTab(currentActiveTab + 1);
 }).on('swiperight', function() {
+	if(currentActiveTab==2) {
+		$('#details').find('#details_container .video').html(videoHtml);
+	}
 	showTab(currentActiveTab - 1);
 });
-
 
 // Open filter view
 $('button.filter').hammer().on('tap', function(e) {
