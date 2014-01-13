@@ -35,6 +35,10 @@ correctly after the animations (otherwise rendering issues) */
 	overflow:auto;
 }
 
+#search_page header {
+	padding:.2em 0;
+}
+
 button.back {
 	float:left;
 	margin-left:1em;
@@ -78,7 +82,7 @@ header .slogan {
 }
 
 #search_page .row {
-	margin-bottom:2em;
+	margin-bottom:1.5em;
 }
 
 #search_page label {
@@ -216,6 +220,7 @@ because of the logic of how filtering works
 }
 
 .result .left {
+	clear:left;
 	float:left;
 	margin-right:0.5em;
 	width:7em;
@@ -284,33 +289,6 @@ dl dt:after {
 	margin-top:0.2em;
 }
 
-#details {
-	position:absolute;
-	top:0;
-	left:0;
-	width:100%;
-	height:100%;
-	background:white;
-	z-index:-1;
-	opacity:0;
-	-webkit-transition:all .5s;
-	transition:all .5s;
-	
-	/* Zoom effect when showing details */
-	-webkit-transform:scale(.1);
-	transform:scale(.1);
-	overflow:hidden;
-}
-
-#details.active {
-	z-index:15;
-	opacity:1;
-
-	/* Zoom effect when showing details */
-	-webkit-transform:scale(1);
-	transform:scale(1);
-}
-
 ul.tabs {
 	margin:0.1em 0 0 0;
 	padding:0;
@@ -325,6 +303,10 @@ ul.tabs li {
 ul.tabs li.active {
 	font-weight:bold;
 	font-size:1.1em;
+}
+
+body #details {
+	z-index:20;
 }
 
 #details #details_container {
@@ -367,14 +349,13 @@ ul.tabs li.active {
 }
 
 
-#filter, #sort {
+#filter, #sort, #favorites, #details {
 	position:absolute;
 	height:100%;
 	width:100%;
 	top:0;
 	left:0;
 	visibility:hidden;
-	z-index:-1;
 	opacity:0;
 
 	/* Zoom effect */
@@ -388,7 +369,7 @@ ul.tabs li.active {
 	overflow:hidden;
 }
 
-#filter.active, #sort.active {
+#filter.active, #sort.active, #favorites.active, #details.active {
 	z-index:15;
 	visibility:visible;
 	opacity:1;
@@ -541,4 +522,64 @@ div.done button.back {
 
 .leaflet-popup-content {
 	text-align:center;
+}
+
+.result .fa-heart {
+	float: left;
+	font-size: 2em;
+	margin-right: 0.2em;
+	margin-top:-0.1em;
+}
+
+.result .fa-heart.active {
+	color:red;
+}
+
+#notification {
+	visibility:hidden;
+	opacity:0;
+	position:absolute;
+	bottom:1em;
+	left:5%;
+	width:90%;
+	padding:1em;
+	color:white;
+	background-color:rgba(0, 0, 0, .95);
+	text-align:center;
+
+	-webkit-transition:all .5s;
+	transition:all .5s;
+}
+
+#notification.active {
+	z-index:30;
+	visibility:visible;
+	opacity:1;
+}
+
+#show-favorites {
+	display:block;
+	margin:auto;
+	margin-top:0.5em;
+}
+
+#show-favorites i {
+	color:red;
+}
+
+#favorites h1 .fa-heart {
+	color:red;
+}
+
+#favorites .page p.no_favorites {
+	margin:1em;
+}
+
+#favorites .page p.no_favorites.hidden {
+	display:none;
+}
+
+#favorites .page {
+	overflow:auto;
+	padding-bottom:2em;
 }
