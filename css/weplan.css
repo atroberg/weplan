@@ -213,11 +213,15 @@ because of the logic of how filtering works
 .result .left {
 	float:left;
 	margin-right:0.5em;
+	width:7em;
+	min-height:7em;
 }
 
-.result img {
+.result .left img {
 	max-width:7em;
 	max-height:6em;
+	display:block;
+	margin:auto;
 }
 
 .result h2 {

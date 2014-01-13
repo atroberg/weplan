@@ -103,7 +103,11 @@ function showDetails(listIndex) {
 		+ destinationInDetailsView.country + ' <img src="images/flags/'+destinationInDetailsView.country+'.png" alt="flag">');
 
 	// Update the information tab
-	detailsEl.find('#details_container .info').html(destinationInDetailsView.description);
+	var descriptionText = $.trim(destinationInDetailsView.description);
+
+	if ( descriptionText == "" ) descriptionText = "Unfortunately no description is available for this destination.";
+
+	detailsEl.find('#details_container .info').html(descriptionText);
 	
 	// Back history
 	addHistory("Details");
@@ -128,8 +132,7 @@ function showDestination(destination, listIndex) {
 	result.find('h2 img').attr('src', 'images/flags/' + destination.country + '.png');
 
 	if ( destination.photos && destination.photos.length > 0 ) {
-		// TODO
-		//result.find('.left img').attr('src', destination.photos[0]);
+		result.find('.left img').attr('src', "images/destinations/200x/" + listIndex + '.jpg');
 	}
 
 	// Randomize weather icon
@@ -277,6 +280,9 @@ $('#search_button').hammer({
 	// Show loading
 	$('#search_results_list .loading').show();
 
+	// Make sure list is scrolled to top
+	$('#search_results_list').scrollTop(0);
+
 	// Back history
 	addHistory("Results");
 	onPopState("Results");
@@ -391,7 +397,7 @@ function showTab(index) {
 	tabMenu.find('li:eq(' + currentActiveTab + ')').addClass('active');
 
 	var value = -(index * 25) + '%';
-	detailsContainer.css('transform', 'translateX('+value+'%)');
+	detailsContainer.css('transform', 'translateX('+value+')');
 
 	// Check if we need to initialize tab with some content
 	
@@ -573,7 +579,7 @@ $('#sort ul li').hammer().on('tap', function(e) {
 		results = sortResults(results, el.attr('data-sort'), el.attr('data-sort-dir') == 'desc');
 
 		// Every other row with different background
-		results.removeClass('odd').filter(':odd').addClass('odd');
+		results.removeClass('odd').filter(':not(.hidden):odd').addClass('odd');
 
 		$('#search_results_list').append(results);
 	}, 100);
