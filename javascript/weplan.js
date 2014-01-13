@@ -119,12 +119,15 @@ function showDestination(destination, listIndex) {
 	result.find('h2 img').attr('src', 'images/flags/' + destination.country + '.png');
 
 	if ( destination.photos && destination.photos.length > 0 ) {
-		result.find('.left img').attr('src', destination.photos[0]);
+		// TODO
+		//result.find('.left img').attr('src', destination.photos[0]);
 	}
 
 	// Randomize weather icon
 	var icons = ['fa-sun-o', 'fa-cloud'];
 	var temperature = Math.round(destination.temperature);
+	result.attr('data-temperature', temperature);
+	destination.calculatedTemperature = temperature;
 	if ( temperature > 0 ) temperature = '+' + temperature;
 	result.find('.temperature').html('<i class="fa ' + icons[Math.floor(Math.random()*icons.length)] + '"></i> ' + temperature + '°C');
 
@@ -144,6 +147,11 @@ function showDestination(destination, listIndex) {
 
 	// Show random price (that matches the search value)
 	var price = destination.price * 500 + Math.floor(Math.random()*500);
+
+	var minimumPriceAllowed = 200;
+	if ( price <= minimumPriceAllowed ) price += minimumPriceAllowed;
+
+	destination.calculatedPrice = price;
 	result.find('.price').html(price + '€');	
 	result.attr('data-price', price);
 
@@ -155,6 +163,50 @@ function showDestination(destination, listIndex) {
 	}
 
 	result.appendTo($('#search_results_list'));
+
+	return destination;
+}
+
+
+// Filtering of the results
+function filterResults() {
+
+	// Price
+	var lowPrice = parseFloat($('#price_slider').attr('data-low-value'));
+	var highPrice = parseFloat($('#price_slider').attr('data-high-value'));
+
+	// Temperature
+	var lowTemperature = parseFloat($('#temperature_slider').attr('data-low-value'));
+	var highTemperature = parseFloat($('#temperature_slider').attr('data-high-value'));
+
+	var resultCount = 0;
+
+	$('#search_results_list .result:not(#list_template)').each(function() {
+		var el = $(this);
+		
+		var price = parseFloat(el.attr('data-price'));
+		var temperature = parseFloat(el.attr('data-temperature'));
+
+		if ( ( lowPrice <= price && highPrice >= price )
+			&& ( lowTemperature <= temperature && highTemperature >= temperature ) ) {
+
+			el.removeClass('hidden');
+
+			if ( resultCount % 2 == 1 ) {
+				el.addClass('odd');
+			}
+			else {
+				el.removeClass('odd');
+			}
+
+			resultCount ++;
+		}
+		else {
+			el.addClass('hidden');
+		}
+	});
+
+	$('.results_count').html(resultCount);
 }
 
 // Search
@@ -163,30 +215,72 @@ $('#search_button').hammer({
 	// Prevent scrolling from being misinterpreted as tapping
 	'tap_max_distance': 1
 }).on('tap', function(e) {
+	$('#search_results_list .result:not(#list_template)').remove();
+
+	// Show loading
+	$('#search_results_list .loading').show();
+
 	// Back history
 	addHistory("Results");
 	onPopState("Results");
 
-	// Clear previous results
-	$('#search_results_list .result:not(#list_template)').remove();
+	setTimeout(function() {
+		// Hide loading
+		$('#search_results_list .loading').hide();
 
-	// Search through the test data
-	var maxBudget = parseFloat($('#max_budget').val());
+		// Search through the test data
+		var maxBudget = parseFloat($('#max_budget').val());
 
-	for ( var i = 0; i < destinations.length; i ++ ) {
-		var destination = destinations[i];
+		// Keep track of min & max values for filter view
+		var minPrice = null;
+		var maxPrice = null;
+		var minTemperature = null;
+		var maxTemperature = null;
 
-		// Price class is indicated by an integer 0-2
-		// 0: 0€ - 500€
-		// 1: 501€ - 1000€
-		// 2: 1001€ -
-		if ( ( maxBudget <= 500 && destination.price == 0 )
-			|| ( maxBudget >= 501 && maxBudget <= 1000 && $.inArray(destination.price, [0, 1]) != -1 )
-			|| ( maxBudget >= 1001 ) ) {
-			
-			showDestination(destination, i);
+		var resultCount = 0;
+
+		for ( var i = 0; i < destinations.length; i ++ ) {
+			var destination = destinations[i];
+
+			// Price class is indicated by an integer 0-2
+			// 0: 0€ - 500€
+			// 1: 501€ - 1000€
+			// 2: 1001€ -
+			if ( ( maxBudget <= 500 && destination.price == 0 )
+				|| ( maxBudget >= 501 && maxBudget <= 1000 && $.inArray(destination.price, [0, 1]) != -1 )
+				|| ( maxBudget >= 1001 ) ) {
+				
+				destination = showDestination(destination, i);
+
+				resultCount ++;
+
+				if ( minPrice == null || minPrice > destination.calculatedPrice ) {
+					minPrice = destination.calculatedPrice;
+				}
+				if ( maxPrice == null || maxPrice < destination.calculatedPrice ) {
+					maxPrice = destination.calculatedPrice;
+				}
+
+				if ( minTemperature == null || minTemperature > destination.calculatedTemperature ) {
+					minTemperature = destination.calculatedTemperature;
+				}
+				if ( maxTemperature == null || maxTemperature < destination.calculatedTemperature ) {
+					maxTemperature = destination.calculatedTemperature;
+				}
+			}
 		}
-	}		
+
+		// Update results count
+		$('.results_count').html(resultCount);
+
+		// Every other row with different background
+		$('#search_results_list .result:not(#list_template):odd').addClass('odd');
+
+		// Update the limits for the range filters
+		$('#price_slider').attr('data-min', minPrice).attr('data-max', maxPrice);
+		$('#temperature_slider').attr('data-min', minTemperature).attr('data-max', maxTemperature);
+	}, 1000);
+
 });
 
 $('button.back').hammer().on('tap', function(e) {
@@ -284,13 +378,26 @@ $('button.sort').hammer().on('tap', function(e) {
 var filterSlidersInitialized = false;
 function initializeFilterSliders() {
 
-	if ( filterSlidersInitialized ) return;
-
-	filterSlidersInitialized = true;
-
 	$('.range_slider').each(function() {
 		var el = $(this);
-		el.append('<div><span class="low"><span>10€</span></span><span class="high"><span>100€</span></span></div>');
+
+		var minValue = parseInt(el.attr('data-min'));
+		var maxValue = parseInt(el.attr('data-max'));
+		var unit = el.attr('data-unit');
+
+		if ( !filterSlidersInitialized ) {
+			el.append('<div><span class="low"><span>10€</span></span><span class="high"><span>100€</span></span></div>');
+		}
+
+		// Always ensure that min & max value are right
+		el.find('.low span').html(minValue + unit);
+		el.find('.high span').html(maxValue + unit);
+		el.attr('data-low-value', minValue);
+		el.attr('data-high-value', maxValue);
+
+		if ( filterSlidersInitialized ) {
+			return;
+		}
 		
 		var fullWidth = el.width();
 		var innerDiv = el.find('> div:first');
@@ -302,16 +409,16 @@ function initializeFilterSliders() {
 	
 		var handleWidth = 21;
 
-		var minValue = parseInt(el.attr('data-min'));
-		var maxValue = parseInt(el.attr('data-max'));
-		var unit = el.attr('data-unit');
-
+		var lowValue;
 		// Dragging of the low handle
 		el.find('.low').hammer({
 			'drag_min_distance': 1,
 			'prevent_default': true
 		}).on('drag', function(e) {
 			var delta = e.gesture.deltaX;
+
+			var minValue = parseInt(el.attr('data-min'));
+			var maxValue = parseInt(el.attr('data-max'));
 
 			var leftPos = lastPointLow + delta;
 		
@@ -321,23 +428,29 @@ function initializeFilterSliders() {
 
 			// Calculate the value
 			var ratio = leftPos / (fullWidth - handleWidth);
-			var value = Math.round(minValue + ratio * (maxValue - minValue));
-			$(this).find('span').html(value + unit);
+			lowValue = Math.round(minValue + ratio * (maxValue - minValue));
+			$(this).find('span').html(lowValue + unit);
 
 			innerDiv.css({
 				'left': leftPos + 'px',
 				'width': lastPointHigh - leftPos + 'px'
 			});
 		}).on('dragend', function(e) {
+			el.attr('data-low-value', lowValue);
 			lastPointLow = parseFloat(innerDiv.css('left').replace('px',''));
+			filterResults();
 		});
 
+		var highValue;
 		// Dragging of the high handle
 		el.find('.high').hammer({
 			'drag_min_distance': 1,
 			'prevent_default': true
 		}).on('drag', function(e) {
 			var delta = e.gesture.deltaX;
+
+			var minValue = parseInt(el.attr('data-min'));
+			var maxValue = parseInt(el.attr('data-max'));
 
 			var width = lastPointHigh + delta;
 
@@ -347,14 +460,19 @@ function initializeFilterSliders() {
 	
 			// Calculate the value
 			var ratio = (width - handleWidth) / (fullWidth - handleWidth);
-			var value = Math.round(minValue + ratio * (maxValue - minValue));
-			$(this).find('span').html(value + unit);
+			highValue = Math.round(minValue + ratio * (maxValue - minValue));
+			$(this).find('span').html(highValue + unit);
 
 			innerDiv.css({
 				'width': width - lastPointLow + 'px'
 			});
 		}).on('dragend', function(e) {
+			el.attr('data-high-value', highValue);
 			lastPointHigh = parseFloat(innerDiv.css('width').replace('px','')) + lastPointLow;
+			filterResults();
 		});
 	});
+
+	filterSlidersInitialized = true;
+
 }

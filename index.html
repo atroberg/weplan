@@ -84,7 +84,7 @@
 					
 					<header>
 						<button class="back btn" type="button">&laquo; Back</button>
-						<h1>12 results</h1>
+						<h1><span class="results_count"></span> results</h1>
 						<button class="btn btn-primary filter"><i class="fa fa-filter"></i> Filter</button>
 						<button class="btn btn-primary sort"><i class="fa fa-retweet"></i> Sort</button>
 					</header>
@@ -113,32 +113,9 @@
 									</dd>
 							</dl>
 						</div>
-					</div>	
-					<div class="result">
-						<h2>Helsinki, Finland <img src="images/flags/Finland.png" alt="Flag of Finland"></h2>
-						<div class="left">
-							<img src="images/destinations/helsinki.jpg" alt="Picture of Helsinki">
-						</div>
-						<div class="facts">
-							<dl>
-								<dt>Weather</dt>
-									<dd class="temperature"><i class="fa fa-cloud"></i> +5°C</dd>	
-								<dt>Price</dt>
-									<dd class="price">€€€</dd>
-								<dt>Rating</dt>
-									<dd class="rating">
-										<i class="fa fa-star"></i>
-										<i class="fa fa-star"></i>
-										<i class="fa fa-star-half-empty"></i>
-									</dd>
-								<dt>Activities</dt>
-									<dd class="activities">
-										<i class="fa fa-cutlery"></i>
-										<i class="fa fa-shopping-cart"></i>
-										<i class="fa fa-asterisk"></i>
-									</dd>
-							</dl>
-						</div>
+					</div>
+					<div class="loading">
+						<p><i class="fa fa-cog fa-spin"></i> Loading results, please wait...</p>
 					</div>
 				</div>
 
@@ -173,16 +150,16 @@
 	<!-- Filter popup -->
 	<div id="filter">
 		<header>
-			<h2>Filter (12 matches)</h2>
+			<h2>Filter (<span class="results_count">12</span> matches)</h2>
 		</header>
 		<div>
 			<div class="filter_row">
 				<label>Price</label>
-				<div class="range_slider" data-min="10" data-max="100" data-unit="€"></div>
+				<div id="price_slider" class="range_slider" data-min="10" data-max="100" data-unit="€"></div>
 			</div>
 			<div class="filter_row">
 				<label>Temperature</label>
-				<div class="range_slider" data-min="10" data-max="100" data-unit="°C"></div>
+				<div id="temperature_slider" class="range_slider" data-min="10" data-max="100" data-unit="°C"></div>
 			</div>
 			<div class="filter_row checkboxes">
 				<label>Continents</label>

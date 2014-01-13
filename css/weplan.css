@@ -188,7 +188,12 @@ header .slogan {
 
 
 /* Search results in list view */
+
+/* The coloring must be done in javascript,
+because of the logic of how filtering works
 .result:nth-child(2n) {
+*/
+.result.odd {
 	background:#E8E8E8;
 }
 
@@ -198,6 +203,11 @@ header .slogan {
 	padding-right:1em;
 	padding-top:0.5em;
 	padding-bottom:0.5em;
+}
+
+/* Hide results that don't match the filter values */
+.result.hidden {
+	display:none;
 }
 
 .result .left {
@@ -254,6 +264,10 @@ dl dt:after {
 #search_results_map header button {
 	margin-bottom:0.4em;
 	margin-left:0.5em;
+}
+
+#search_results_list {
+	background:white;
 }
 
 #search_results_list header button {
@@ -496,4 +510,17 @@ div.done button.back {
 
 #list_template {
 	display:none;
+}
+
+.loading {
+	background:white;
+	height:100%;
+}
+
+.loading p {
+	margin:1em;
+}
+
+#search_results_list > * {
+	-webkit-backface-visibility:hidden;
 }
