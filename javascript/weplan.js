@@ -86,26 +86,30 @@ function onPopState(page) {
 				}, 500);
 			}
 
-			$('#favorites').addClass('active');
-
-			// Get favorites from localStorage
-			var favorites = JSON.parse(localStorage.getItem("favorites"));
-			if ( favorites == null ) favorites = {};
-
-			var favoritesFound = false;
-
-			for ( var listIndex in favorites ) {
-				if ( favorites[listIndex] ) {
-					showDestination(destinations[listIndex], listIndex, true, true);
-					favoritesFound = true;
-				}
-			}
-
-			if ( favoritesFound ) {
-				$('#favorites p.no_favorites').addClass('hidden');
-			}
 			else {
-				$('#favorites p.no_favorites').removeClass('hidden');
+
+				$('#favorites').addClass('active');
+
+				// Get favorites from localStorage
+				var favorites = JSON.parse(localStorage.getItem("favorites"));
+				if ( favorites == null ) favorites = {};
+
+				var favoritesFound = false;
+
+				for ( var listIndex in favorites ) {
+					if ( favorites[listIndex] ) {
+						showDestination(destinations[listIndex], listIndex, true, true);
+						favoritesFound = true;
+					}
+				}
+
+				if ( favoritesFound ) {
+					$('#favorites p.no_favorites').addClass('hidden');
+				}
+				else {
+					$('#favorites p.no_favorites').removeClass('hidden');
+				}
+
 			}
 
 			break;
