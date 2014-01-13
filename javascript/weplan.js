@@ -9,11 +9,17 @@ function onPopState(page) {
 	switch ( page ) {
 
 		case 'Frontpage':
-			$('#main_container').css('transform-origin', '50% 200%');
-			$('#main_container').css('transform', 'translateY('+ resultsPositionTop + 'px) scale(.5)');
-			setTimeout(function() {
-				$('#main_container').css('transform', 'translateY(0px) scale(1)');
-			}, 400);
+			if ( $('#favorites').hasClass('active') ) {
+				$('#favorites').removeClass('active');
+			}
+
+			else {
+				$('#main_container').css('transform-origin', '50% 200%');
+				$('#main_container').css('transform', 'translateY('+ resultsPositionTop + 'px) scale(.5)');
+				setTimeout(function() {
+					$('#main_container').css('transform', 'translateY(0px) scale(1)');
+				}, 400);
+			}
 
 			break;
 
@@ -21,6 +27,13 @@ function onPopState(page) {
 		case 'Results':
 			if ( $('#details').hasClass('active') ) {
 				$('#details').removeClass('active');
+				
+				// Reset details view photos
+				setTimeout(function() {
+					showTab(0);
+					$('#details .tab.photos *:not(.loading)').remove();
+					$('#details .tab.photos .loading').removeClass('hidden');
+				}, 500);
 			}
 
 			else if ( $('#filter').hasClass('active') ) {
@@ -58,6 +71,47 @@ function onPopState(page) {
 
 		case 'Sort':
 			$('#sort').addClass('active');	
+			break;
+
+		case 'Favorites':
+
+			if ( $('#details').hasClass('active') ) {
+				$('#details').removeClass('active');
+				
+				// Reset details view photos
+				setTimeout(function() {
+					showTab(0);
+					$('#details .tab.photos *:not(.loading)').remove();
+					$('#details .tab.photos .loading').removeClass('hidden');
+				}, 500);
+			}
+
+			else {
+
+				$('#favorites').addClass('active');
+
+				// Get favorites from localStorage
+				var favorites = JSON.parse(localStorage.getItem("favorites"));
+				if ( favorites == null ) favorites = {};
+
+				var favoritesFound = false;
+
+				for ( var listIndex in favorites ) {
+					if ( favorites[listIndex] ) {
+						showDestination(destinations[listIndex], listIndex, true, true);
+						favoritesFound = true;
+					}
+				}
+
+				if ( favoritesFound ) {
+					$('#favorites p.no_favorites').addClass('hidden');
+				}
+				else {
+					$('#favorites p.no_favorites').removeClass('hidden');
+				}
+
+			}
+
 			break;
 
 	}
@@ -124,7 +178,7 @@ var destinationInDetailsView;
 
 // Add destination to search results
 var destinationsToAddToDom = [];
-function showDestination(destination, listIndex) {
+function showDestination(destination, listIndex, isFavorited, addToFavoritesView) {
 	var result = $('#list_template').clone().removeAttr('id').attr('data-list-index', listIndex);
 
 	// Show details view when clicking result
@@ -146,6 +200,11 @@ function showDestination(destination, listIndex) {
 	destination.calculatedTemperature = temperature;
 	if ( temperature > 0 ) temperature = '+' + temperature;
 	result.find('.temperature').html('<i class="fa ' + icons[Math.floor(Math.random()*icons.length)] + '"></i> ' + temperature + '°C');
+
+	// Favorite icon
+	if ( isFavorited ) {
+		result.find('.favorite').addClass('active');
+	}
 
 	// Show random rating (0.5 - 3)
 	var rating = (0.0 + (1 + Math.floor(Math.random() * 5 + 1))) / 2.0;
@@ -178,26 +237,74 @@ function showDestination(destination, listIndex) {
 		activitiesEl.append('<i class="' + activities[destination.activities[i]] + '"></i> ');
 	}
 
-	destinationsToAddToDom.push(result);
+	// Favoriting
+	result.find('.favorite').hammer().on('tap', function(e) {
+		e.stopPropagation();
 
+		var el = $(this);
 
-	// UPDATING THE MAP VIEW
+		var listIndex = parseInt(el.parent().attr('data-list-index'));
 
-	var coordinates = [destination.latitude, destination.longitude];
+		// Get favorites from localStorage
+		var favorites = JSON.parse(localStorage.getItem("favorites"));
 
-	// Map bounds
-	if ( bounds == null ) {
-		bounds = L.latLngBounds([]);
+		// If not initialized before, do it now
+		if ( favorites == null ) favorites = {};
+		
+		// Not yet in favorites
+		if ( !el.hasClass('active') ) {
+			el.addClass('active');
+			showNotification("Destination added to favorites");
+			favorites[listIndex] = true;
+		}
+
+		// Already favorited
+		else {
+			el.removeClass('active');
+			showNotification("Destination removed from favorites");
+			favorites[listIndex] = false;
+
+			// If in favorites view, we also need to immediately remove the destination from the view
+			if ( addToFavoritesView ) {
+				el.parent().fadeOut(function() {
+					// Check if last favorited removed => show no favs text again
+					if ( $(this).parent().find('.result').length <= 1 ) {
+						$(this).parent().find('.no_favorites').removeClass('hidden');
+					}
+
+					$(this).remove();
+				});
+			}
+		}
+
+		// Save back to localStorage
+		localStorage.setItem("favorites", JSON.stringify(favorites));
+	});
+
+	if ( addToFavoritesView ) {
+		$('#favorites .page').append(result);
 	}
-	bounds.extend(coordinates);
+	else {
+		destinationsToAddToDom.push(result);
 
-	// Add marker to map
-	var markerObject = {
-		marker: L.marker(coordinates).addTo(map)
-	};
-	markerObject.marker.bindPopup("<h3>" + destination.city + ', ' + destination.country + "</h3>"+
-				"<button onclick='showDetails("+listIndex+")' ontouchend='showDetails("+listIndex+")' class='btn btn-primary'>Read More</button>");
-	mapMarkers[listIndex] = markerObject;
+		// UPDATING THE MAP VIEW
+
+		var coordinates = [destination.latitude, destination.longitude];
+
+		// Map bounds
+		if ( bounds == null ) {
+			bounds = L.latLngBounds([]);
+		}
+		bounds.extend(coordinates);
+
+		// Add marker to map
+		var markerObject = {
+			marker: L.marker(coordinates).addTo(map)
+		};
+		markerObject.marker.bindPopup("<h3>" + destination.city + ', ' + destination.country + "</h3>"+
+					"<button onclick='showDetails("+listIndex+")' ontouchend='showDetails("+listIndex+")' class='btn btn-primary'>Read More</button>");
+		mapMarkers[listIndex] = markerObject;
+	}
 
 	return destination;
 }
@@ -316,6 +423,10 @@ $('#search_button').hammer({
 
 		var resultCount = 0;
 
+		// Get favorites from localStorage
+		var favorites = JSON.parse(localStorage.getItem("favorites"));
+		if ( favorites == null ) favorites = {};
+
 		for ( var i = 0; i < destinations.length; i ++ ) {
 			var destination = destinations[i];
 
@@ -327,7 +438,7 @@ $('#search_button').hammer({
 				|| ( maxBudget >= 501 && maxBudget <= 1000 && $.inArray(destination.price, [0, 1]) != -1 )
 				|| ( maxBudget >= 1001 ) ) {
 				
-				destination = showDestination(destination, i);
+				destination = showDestination(destination, i, favorites[i]);
 
 				resultCount ++;
 
@@ -347,25 +458,34 @@ $('#search_button').hammer({
 			}
 		}
 
-		// Sort the destinations
-		destinationsToAddToDom = sortResults(destinationsToAddToDom, "price", false);
+		// No results
+		if ( destinationsToAddToDom.length == 0 ) {
+			$('#search_results_list .no_results').addClass('active');
+		}
 
-		// Add results to DOM
-		$('#search_results_list').append(destinationsToAddToDom);
-		destinationsToAddToDom = [];
+		else {
+			$('#search_results_list .no_results').removeClass('active');
 
-		// Update results count
-		$('.results_count').html(resultCount);
+			// Sort the destinations
+			destinationsToAddToDom = sortResults(destinationsToAddToDom, "price", false);
 
-		// Every other row with different background
-		$('#search_results_list .result:not(#list_template):odd').addClass('odd');
+			// Add results to DOM
+			$('#search_results_list').append(destinationsToAddToDom);
+			destinationsToAddToDom = [];
 
-		// Update the limits for the range filters
-		$('#price_slider').attr('data-min', minPrice).attr('data-max', maxPrice);
-		$('#temperature_slider').attr('data-min', minTemperature).attr('data-max', maxTemperature);
+			// Update results count
+			$('.results_count').html(resultCount);
 
-		// Make the map fit the markers
-		map.fitBounds(bounds);
+			// Every other row with different background
+			$('#search_results_list .result:not(#list_template):odd').addClass('odd');
+
+			// Update the limits for the range filters
+			$('#price_slider').attr('data-min', minPrice).attr('data-max', maxPrice);
+			$('#temperature_slider').attr('data-min', minTemperature).attr('data-max', maxTemperature);
+
+			// Make the map fit the markers
+			map.fitBounds(bounds);
+		}
 
 	}, 1000);
 
@@ -390,7 +510,7 @@ tabMenu.find('li').hammer().on('tap', function() {
 
 function showTab(index) {
 
-	// Check tab exists
+	// Check that tab exists
 	if ( index < 0 || index > detailsContainer.find('.tab').length - 1 ) {
 		return;
 	}
@@ -403,18 +523,13 @@ function showTab(index) {
 	var value = -(index * 25) + '%';
 	detailsContainer.css('transform', 'translateX('+value+')');
 
-	// Check if we need to initialize tab with some content
-	
 	var tab = detailsContainer.find('.tab:eq(' + currentActiveTab + ')');
 
 	switch ( currentActiveTab ) {
 
-		default:
-			// By default we don't need to do anything
-			break;
-
 		// Photos
 		case 1:
+
 			// Fetch images from Google image search
 			$.ajax({
 				'url': 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0',
@@ -427,7 +542,7 @@ function showTab(index) {
 				'dataType': 'jsonp',
 				'success': function(data) {
 					// Remove loading msg
-					tab.html('');
+					tab.find('.loading').addClass('hidden');
 
 					for( var i = 0; i < data.responseData.results.length; i ++ ) {
 						var result = data.responseData.results[i];
@@ -435,6 +550,9 @@ function showTab(index) {
 						var img = $('<div />').css('background-image', 'url("' + result.url + '")');
 						tab.append(img);
 					}
+				},
+				'error': function() {
+					alert("There was a problem fetching photos from Google. Try again.");
 				}
 			});
 			break;
@@ -626,3 +744,25 @@ function sortResults(results, sortCriteria, descSort) {
 		return result;
 	});
 }
+
+
+// Function for showing notifications
+function showNotification(msg, msgVisibleDuration) {
+
+	// Default duration
+	if ( typeof(msgVisibleDuration) == "undefined" ) msgVisibleDuration = 2500;
+
+	$('#notification').html(msg).addClass('active');
+
+	setTimeout(function() {
+		$('#notification').removeClass('active');
+	}, msgVisibleDuration);
+	
+}
+
+
+// Open favorites by clicking the button
+$('#show-favorites').hammer().on('tap', function(e) {
+	addHistory("Favorites");
+	onPopState("Favorites");
+});

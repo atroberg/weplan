@@ -39,6 +39,9 @@
 				<header>
 					<h1>WePlan</h1>
 					<span class="slogan">Travel Destination Finder</span>
+					<button class="btn btn-primary" id="show-favorites">
+						<i class="fa fa-heart"></i> Show my favorites
+					</button>
 				</header>
 				<div class="row">
 					<label for="departure_from">
@@ -89,6 +92,7 @@
 						<button class="btn btn-primary sort"><i class="fa fa-retweet"></i> Sort</button>
 					</header>
 					<div class="result" id="list_template">
+						<i class="fa fa-heart favorite"></i>
 						<h2><span>Nice, France</span> <img src="images/flags/France.png" alt="Flag"></h2>
 						<div class="left">
 							<img src="images/destinations/nice.jpg" alt="Picture of the destination">
@@ -117,6 +121,7 @@
 					<div class="loading">
 						<p><i class="fa fa-cog fa-spin"></i> Loading results, please wait...</p>
 					</div>
+					<div class="no_results">No results matched your search. Try changing your search criteria. Enter price = 400€ for example.</div>
 				</div>
 
 				<div class="page" id="search_results_map">
@@ -144,7 +149,13 @@
 
 	<!-- Favorites div -->
 	<div id="favorites">
-
+		<header>
+			<button class="back btn" type="button">&laquo; Back</button>
+			<h1><i class="fa fa-heart"></i> Your favorites</h1>
+		</header>
+		<div class="page">
+			<p class="no_favorites">You don't yet have any favorites. You can add destinations to your favorites by touching the red heart icon in results view.</p>
+		</div>
 	</div>
 
 	<!-- Filter popup -->
@@ -261,13 +272,19 @@
 				Nice is a nice city bla bla bla.
 			</div>
 			<div class="tab photos">
-				<p><i class="fa fa-cog fa-spin"></i> Fetching photos, please wait...</p>
+				<p class="loading"><i class="fa fa-cog fa-spin"></i> Fetching photos, please wait...</p>
 			</div>
 			<div class="tab video">
 				Here the video!
 			</div>
+			<div class="tab tickets">
+				Feature not implemented. This type of application could get revenue by taking a comission from sold tickets.
+			</div>
 		</div>
 	</div>
+
+	<!-- This div is used for notification message -->
+	<div id="notification"></div>
 
 	<!-- All javascripts are placed here for faster page load -->
 
