@@ -9,6 +9,8 @@ body {
 	margin:0;
 	padding:0;
 	-webkit-transform:translate(0px,0px);
+	-moz-transform:translate(0px,0px);
+	-ms-transform:translate(0px,0px);
 	transform:translate(0px,0px);
 
 	/* TODO: take similar sunset picture from open source photogallery etc */
@@ -27,6 +29,8 @@ correctly after the animations (otherwise rendering issues) */
 	height:100%;
 	position:relative;
 	-webkit-transition:all .5s;
+	-moz-transition:all .5s;
+	-ms-transition:all .5s;
 	transition:all .5s;
 }
 
@@ -120,6 +124,8 @@ header .slogan {
 	height:100%;
 	position:relative;
 	-webkit-transition:all 0.5s;
+	-moz-transition:all 0.5s;
+	-ms-transition:all 0.5s;
 	transition:all 0.5s;
 }
 
@@ -139,19 +145,23 @@ header .slogan {
 	text-transform:uppercase;
 	font-size:1.4em;
 	height:100%;
-	background-color:rgba(0, 0, 0, .8);
 	width:.5em;
 }
 
 #map_view_handle span {
 	display:block;
-	/* TODO: need add different browser prefixes */
 	-webkit-transform:rotate(-90deg);
 	-webkit-transform-origin:0% 0%;
+	-moz-transform:rotate(-90deg);
+	-moz-transform-origin:0% 0%;
+	-ms-transform:rotate(-90deg);
+	-ms-transform-origin:0% 0%;
+	transform:rotate(-90deg);
+	transform-origin:0% 0%;
 
 	position:absolute;
-	top:65%;
-	left:-1.71em;
+	top:calc(50% + 112px);
+	left:-32px;
 	color:white;
 	padding:0.3em 0 0 0;
 	border-top-right-radius:2em;
@@ -171,19 +181,23 @@ header .slogan {
 	text-transform:uppercase;
 	font-size:1.4em;
 	height:100%;
-	background-color:rgba(0, 0, 0, .8);
 	width:.5em;
 }
 
 #list_view_handle span {
 	display:block;
-	/* TODO: need add different browser prefixes */
 	-webkit-transform:rotate(-90deg);
 	-webkit-transform-origin:0% 0%;
+	-moz-transform:rotate(-90deg);
+	-moz-transform-origin:0% 0%;
+	-ms-transform:rotate(-90deg);
+	-ms-transform-origin:0% 0%;
+	transform:rotate(-90deg);
+	transform-origin:0% 0%;
 
 	position:absolute;
-	top:65%;
-	left:0.51em;
+	top:calc(50% + 112px);
+	left:0;
 	color:white;
 	padding:0 0 0.3em 0;
 	border-bottom-right-radius:2em;
@@ -314,6 +328,8 @@ body #details {
 	height:100%;
 	overflow:hidden;
 	-webkit-transition:all .5s;
+	-moz-transition:all .5s;
+	-ms-transition:all .5s;
 	transition:all .5s;
 }
 
@@ -368,9 +384,13 @@ body #details {
 
 	/* Zoom effect */
 	-webkit-transform:scale(.1);
+	-moz-transform:scale(.1);
+	-ms-transform:scale(.1);
 	transform:scale(.1);
 
 	-webkit-transition:all .5s;
+	-moz-transition:all .5s;
+	-ms-transition:all .5s;
 	transition:all .5s;
 
 	background:white;
@@ -384,6 +404,8 @@ body #details {
 
 	/* Zoom effect */
 	-webkit-transform:scale(1);
+	-moz-transform:scale(1);
+	-ms-transform:scale(1);
 	transform:scale(1);
 }
 
@@ -556,6 +578,8 @@ div.done button.back {
 	text-align:center;
 
 	-webkit-transition:all .5s;
+	-moz-transition:all .5s;
+	-ms-transition:all .5s;
 	transition:all .5s;
 }
 
