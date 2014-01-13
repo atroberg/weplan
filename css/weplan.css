@@ -354,6 +354,10 @@ ul.tabs li.active {
 	float:left;
 }
 
+.tab.video {
+	padding-top:1em;
+}
+
 /* Make height equal width, credits: http://www.mademyday.de/css-height-equals-width-with-pure-css.html */
 .tab.photos div:before {
 	content: "";

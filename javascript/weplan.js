@@ -108,6 +108,11 @@ function showDetails(listIndex) {
 	if ( descriptionText == "" ) descriptionText = "Unfortunately no description is available for this destination.";
 
 	detailsEl.find('#details_container .info').html(descriptionText);
+
+	// Update the video tab
+	var videoUrl = $.trim(destinationInDetailsView.videos[0]);
+
+	detailsEl.find('#details_container .video').html("<video controls src=\"" + videoUrl + "\">Video of " + destinationInDetailsView.city + ", " + destinationInDetailsView.country + "</video>");
 	
 	// Back history
 	addHistory("Details");
