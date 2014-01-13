@@ -595,3 +595,13 @@ div.done button.back {
 .tab.tickets {
 	padding:1em;
 }
+
+#search_results_list .no_results {
+	display:none;
+	background:white;
+	padding:1em;
+}
+
+#search_results_list .no_results.active {
+	display:block;
+}

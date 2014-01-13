@@ -459,25 +459,34 @@ $('#search_button').hammer({
 			}
 		}
 
-		// Sort the destinations
-		destinationsToAddToDom = sortResults(destinationsToAddToDom, "price", false);
+		// No results
+		if ( destinationsToAddToDom.length == 0 ) {
+			$('#search_results_list .no_results').addClass('active');
+		}
 
-		// Add results to DOM
-		$('#search_results_list').append(destinationsToAddToDom);
-		destinationsToAddToDom = [];
+		else {
+			$('#search_results_list .no_results').removeClass('active');
 
-		// Update results count
-		$('.results_count').html(resultCount);
+			// Sort the destinations
+			destinationsToAddToDom = sortResults(destinationsToAddToDom, "price", false);
 
-		// Every other row with different background
-		$('#search_results_list .result:not(#list_template):odd').addClass('odd');
+			// Add results to DOM
+			$('#search_results_list').append(destinationsToAddToDom);
+			destinationsToAddToDom = [];
 
-		// Update the limits for the range filters
-		$('#price_slider').attr('data-min', minPrice).attr('data-max', maxPrice);
-		$('#temperature_slider').attr('data-min', minTemperature).attr('data-max', maxTemperature);
+			// Update results count
+			$('.results_count').html(resultCount);
 
-		// Make the map fit the markers
-		map.fitBounds(bounds);
+			// Every other row with different background
+			$('#search_results_list .result:not(#list_template):odd').addClass('odd');
+
+			// Update the limits for the range filters
+			$('#price_slider').attr('data-min', minPrice).attr('data-max', maxPrice);
+			$('#temperature_slider').attr('data-min', minTemperature).attr('data-max', maxTemperature);
+
+			// Make the map fit the markers
+			map.fitBounds(bounds);
+		}
 
 	}, 1000);
 
