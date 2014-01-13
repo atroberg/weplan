@@ -52,6 +52,11 @@ header {
 	padding:0.5em 0;
 	text-align:center;
 	color:white;
+
+	/* Make sure the bg-image for filter sliders is preloaded */
+	background-image:url(../images/slider_bg.png);
+	background-repeat:no-repeat;
+	background-position:-100px -100px;
 }
 
 /* Slogan/Logo */
