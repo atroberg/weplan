@@ -88,7 +88,7 @@ function onPopState(page) {
 
 			else {
 
-				$('#favorites').addClass('active');
+				$('#favorites').addClass('active').find('.page .result').remove();
 
 				// Get favorites from localStorage
 				var favorites = JSON.parse(localStorage.getItem("favorites"));
@@ -420,7 +420,12 @@ $('#search_button').hammer({
 		$('#search_results_list .loading').hide();
 
 		// Search through the test data
-		var maxBudget = parseFloat($('#max_budget').val());
+		if ( $.trim($('#max_budget').val()) == "" ) {
+			var maxBudget = 400; // just some value so that we get results
+		}
+		else {
+			var maxBudget = parseFloat($('#max_budget').val());
+		}
 
 		// Remove previous markers from map
 		for ( var key in mapMarkers ) {
