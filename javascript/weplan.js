@@ -147,6 +147,23 @@ $('#list_view_handle').hammer({
 });
 
 
+// Insert user's current location in the location field as default
+navigator.geolocation.getCurrentPosition( function(pos) {
+
+	var geocoder = new google.maps.Geocoder(); 
+	geocoder.geocode({
+		'location': new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude), 
+		region: 'no' 
+	}, function(results, status){
+		// result contains an array of hits.
+		$('#departure_from').val(results[1].formatted_address);
+	});
+
+}, function(err) {
+	alert("Geolocation failed because:" + err.message);
+});
+
+
 // Showing destination in details view
 function showDetails(listIndex) {
 	// Update details view with the right contents
