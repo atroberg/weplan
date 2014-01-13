@@ -331,6 +331,11 @@ ul.tabs li.active {
 	float:left;
 	height:100%;
 	overflow:auto;
+	padding-bottom:10em;
+}
+
+.tab.info {
+	padding:1em;
 }
 
 .tab.photos div {
@@ -523,4 +528,8 @@ div.done button.back {
 
 #search_results_list > * {
 	-webkit-backface-visibility:hidden;
+}
+
+.leaflet-popup-content {
+	text-align:center;
 }

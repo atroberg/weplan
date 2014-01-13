@@ -71,17 +71,13 @@ addHistory("Frontpage");
 
 
 // Initialize the map
+var bounds = null;
+var mapMarkers = [];
 var map = L.map('map').setView([64.886265, 29.047852], 4);
 L.tileLayer('http://mtile03.mqcdn.com/tiles/1.0.0/vy/map/{z}/{x}/{y}.png', {
 	attribution: '',
 	maxZoom: 18
 }).addTo(map);
-
-function windowScrollTop(position) {
-	$('body').animate({
-		'scrollTop': position
-	});
-}
 
 
 // Switching between list and map view
@@ -97,22 +93,35 @@ $('#list_view_handle').hammer({
 });
 
 
+// Showing destination in details view
+function showDetails(listIndex) {
+	// Update details view with the right contents
+	destinationInDetailsView = destinations[listIndex];
+
+	var detailsEl = $('#details');
+	detailsEl.find('h1').html(destinationInDetailsView.city + ', '
+		+ destinationInDetailsView.country + ' <img src="images/flags/'+destinationInDetailsView.country+'.png" alt="flag">');
+
+	// Update the information tab
+	detailsEl.find('#details_container .info').html(destinationInDetailsView.description);
+	
+	// Back history
+	addHistory("Details");
+	onPopState("Details");
+}
+
 // A global variable for holding the currently active
 // destination in the details view
 var destinationInDetailsView;
 
 // Add destination to search results
+var destinationsToAddToDom = [];
 function showDestination(destination, listIndex) {
 	var result = $('#list_template').clone().removeAttr('id').attr('data-list-index', listIndex);
 
 	// Show details view when clicking result
 	result.hammer().on('tap', function(e) {
-		// Update details view with the right contents
-		destinationInDetailsView = destinations[listIndex];
-		
-		// Back history
-		addHistory("Details");
-		onPopState("Details");
+		showDetails(listIndex);
 	});
 
 	result.find('h2 span').html(destination.city + ', ' + destination.country);
@@ -162,7 +171,26 @@ function showDestination(destination, listIndex) {
 		activitiesEl.append('<i class="' + activities[destination.activities[i]] + '"></i> ');
 	}
 
-	result.appendTo($('#search_results_list'));
+	destinationsToAddToDom.push(result);
+
+
+	// UPDATING THE MAP VIEW
+
+	var coordinates = [destination.latitude, destination.longitude];
+
+	// Map bounds
+	if ( bounds == null ) {
+		bounds = L.latLngBounds([]);
+	}
+	bounds.extend(coordinates);
+
+	// Add marker to map
+	var markerObject = {
+		marker: L.marker(coordinates).addTo(map)
+	};
+	markerObject.marker.bindPopup("<h3>" + destination.city + ', ' + destination.country + "</h3>"+
+				"<button onclick='showDetails("+listIndex+")' ontouchend='showDetails("+listIndex+")' class='btn btn-primary'>Read More</button>");
+	mapMarkers[listIndex] = markerObject;
 
 	return destination;
 }
@@ -183,6 +211,8 @@ function filterResults() {
 
 	$('#search_results_list .result:not(#list_template)').each(function() {
 		var el = $(this);
+
+		var listIndex = parseInt(el.attr('data-list-index'));
 		
 		var price = parseFloat(el.attr('data-price'));
 		var temperature = parseFloat(el.attr('data-temperature'));
@@ -199,12 +229,31 @@ function filterResults() {
 				el.removeClass('odd');
 			}
 
+			mapMarkers[listIndex].matchesFilter = true;
+
 			resultCount ++;
 		}
 		else {
 			el.addClass('hidden');
+
+			mapMarkers[listIndex].matchesFilter = false;
 		}
 	});
+
+	// Update map markers
+	bounds = L.latLngBounds([]);
+	for ( var key in mapMarkers ) {
+		var tmp = mapMarkers[key];
+		map.removeLayer(tmp.marker);
+	}
+	for ( var key in mapMarkers ) {
+		var tmp = mapMarkers[key];
+		if ( tmp.matchesFilter ) {
+			tmp.marker.addTo(map);
+			bounds.extend(tmp.marker.getLatLng());
+		}
+	}
+	map.fitBounds(bounds);
 
 	$('.results_count').html(resultCount);
 }
@@ -215,7 +264,15 @@ $('#search_button').hammer({
 	// Prevent scrolling from being misinterpreted as tapping
 	'tap_max_distance': 1
 }).on('tap', function(e) {
+
+	// Remove old results
 	$('#search_results_list .result:not(#list_template)').remove();
+
+	// Reset number of results
+	$('.results_count').html('');
+
+	// Reset filters
+	$('.range_slider').html('');
 
 	// Show loading
 	$('#search_results_list .loading').show();
@@ -230,6 +287,16 @@ $('#search_button').hammer({
 
 		// Search through the test data
 		var maxBudget = parseFloat($('#max_budget').val());
+
+		// Remove previous markers from map
+		for ( var key in mapMarkers ) {
+			var tmp = mapMarkers[key];
+			map.removeLayer(tmp.marker);
+		}
+		mapMarkers = [];
+
+		// Reset map bounds
+		bounds = null;
 
 		// Keep track of min & max values for filter view
 		var minPrice = null;
@@ -270,6 +337,13 @@ $('#search_button').hammer({
 			}
 		}
 
+		// Sort the destinations
+		destinationsToAddToDom = sortResults(destinationsToAddToDom, "price", false);
+
+		// Add results to DOM
+		$('#search_results_list').append(destinationsToAddToDom);
+		destinationsToAddToDom = [];
+
 		// Update results count
 		$('.results_count').html(resultCount);
 
@@ -279,6 +353,10 @@ $('#search_button').hammer({
 		// Update the limits for the range filters
 		$('#price_slider').attr('data-min', minPrice).attr('data-max', maxPrice);
 		$('#temperature_slider').attr('data-min', minTemperature).attr('data-max', maxTemperature);
+
+		// Make the map fit the markers
+		map.fitBounds(bounds);
+
 	}, 1000);
 
 });
@@ -375,7 +453,6 @@ $('button.sort').hammer().on('tap', function(e) {
 });
 
 // Initialize the range sliders
-var filterSlidersInitialized = false;
 function initializeFilterSliders() {
 
 	$('.range_slider').each(function() {
@@ -384,6 +461,8 @@ function initializeFilterSliders() {
 		var minValue = parseInt(el.attr('data-min'));
 		var maxValue = parseInt(el.attr('data-max'));
 		var unit = el.attr('data-unit');
+
+		var filterSlidersInitialized = el.find('div').length > 0;
 
 		if ( !filterSlidersInitialized ) {
 			el.append('<div><span class="low"><span>10€</span></span><span class="high"><span>100€</span></span></div>');
@@ -409,8 +488,8 @@ function initializeFilterSliders() {
 	
 		var handleWidth = 21;
 
-		var lowValue;
 		// Dragging of the low handle
+		var lowValue;
 		el.find('.low').hammer({
 			'drag_min_distance': 1,
 			'prevent_default': true
@@ -441,8 +520,8 @@ function initializeFilterSliders() {
 			filterResults();
 		});
 
-		var highValue;
 		// Dragging of the high handle
+		var highValue;
 		el.find('.high').hammer({
 			'drag_min_distance': 1,
 			'prevent_default': true
@@ -472,7 +551,68 @@ function initializeFilterSliders() {
 			filterResults();
 		});
 	});
+}
 
-	filterSlidersInitialized = true;
 
+// Sorting
+$('#sort ul li').hammer().on('tap', function(e) {
+	var el = $(this);
+
+	// Close the filter window
+	window.history.back();
+
+	// Let animation start, because otherwise the animation is not smooth
+	setTimeout(function() {
+		// Indicate with an icon which sort order is currently active
+		el.parent().find('.fa-check').remove();
+		el.prepend('<i class="fa fa-check"></i>');
+
+		// Sorting logic
+		var results = $('#search_results_list .result:not(#list_template)').detach();
+
+		results = sortResults(results, el.attr('data-sort'), el.attr('data-sort-dir') == 'desc');
+
+		// Every other row with different background
+		results.removeClass('odd').filter(':odd').addClass('odd');
+
+		$('#search_results_list').append(results);
+	}, 100);
+});
+
+function sortResults(results, sortCriteria, descSort) {
+	return results.sort(function(a, b) {
+
+		if ( a instanceof jQuery ) {
+			var a = a.get(0);
+			var b = b.get(0);
+		}
+
+		switch ( sortCriteria ) {
+
+			default:
+				var attributeName = 'data-' + sortCriteria;
+				var aVal = parseFloat(a.getAttribute(attributeName));
+				var bVal = parseFloat(b.getAttribute(attributeName));
+
+				break;
+
+			case 'az':
+				var aVal = $(a).find('h2 span').html().toLowerCase();
+				var bVal = $(b).find('h2 span').html().toLowerCase();
+
+				break;
+
+		}
+
+		if ( aVal > bVal ) var result = 1;
+		else if ( aVal < bVal ) var result = -1;
+		else var result = 0;
+
+
+		if ( descSort ) {
+			result = -result;
+		}
+
+		return result;
+	});
 }

@@ -127,7 +127,7 @@
 					<header>
 						<button class="back btn" type="button">&laquo; Back</button>
 						<h1>
-							12 results
+							<span class="results_count"></span> results
 							<button class="btn btn-primary filter"><i class="fa fa-filter"></i> Filter</button>
 						</h1>
 					</header>
@@ -232,12 +232,14 @@
 		</header>
 		<div>
 			<ul>
-				<li><i class="fa fa-check"></i> Alphabetical <i class="fa fa-sort-alpha-asc"></i></li>
-				<li>Alphabetical <i class="fa fa-sort-alpha-desc"></i></li>
-				<li>Price <i class="fa fa-sort-numeric-asc"></i></li>
-				<li>Price <i class="fa fa-sort-numeric-desc"></i></li>
-				<li>Temperature <i class="fa fa-sort-amount-asc"></i></li>
-				<li>Temperature <i class="fa fa-sort-amount-desc"></i></li>
+				<li data-sort="az">Alphabetical <i class="fa fa-sort-alpha-asc"></i></li>
+				<li data-sort="az" data-sort-dir="desc">Alphabetical <i class="fa fa-sort-alpha-desc"></i></li>
+				<li data-sort="price"><i class="fa fa-check"></i> Price <i class="fa fa-sort-numeric-asc"></i></li>
+				<li data-sort="price" data-sort-dir="desc">Price <i class="fa fa-sort-numeric-desc"></i></li>
+				<li data-sort="rating">Rating <i class="fa fa-sort-amount-asc"></i></li>
+				<li data-sort="rating" data-sort-dir="desc">Rating <i class="fa fa-sort-amount-desc"></i></li>
+				<li data-sort="temperature">Temperature <i class="fa fa-sort-amount-asc"></i></li>
+				<li data-sort="temperature" data-sort-dir="desc">Temperature <i class="fa fa-sort-amount-desc"></i></li>
 			</ul>
 		</div>
 	</div>
@@ -255,7 +257,7 @@
 			</ul>
 		</header>
 		<div id="details_container">
-			<div class="tab">
+			<div class="tab info">
 				Nice is a nice city bla bla bla.
 			</div>
 			<div class="tab photos">
