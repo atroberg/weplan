@@ -5,11 +5,13 @@ window.onpopstate = function(e) {
 	onPopState(e.state.page);
 };
 
+var currentView = "Frontpage";
 function onPopState(page) {
 
 	switch ( page ) {
 
 		case 'Frontpage':
+			currentView = "Frontpage";
 			if ( $('#favorites').hasClass('active') ) {
 				$('#favorites').removeClass('active');
 			}
@@ -26,6 +28,7 @@ function onPopState(page) {
 
 		// Coming back from details view
 		case 'Results':
+			currentView = "Results";
 			if ( $('#details').hasClass('active') ) {
 				$('#details').removeClass('active');
 				
@@ -123,6 +126,22 @@ function addHistory(page) {
 	window.history.pushState({page:page}, page);
 }
 addHistory("Frontpage");
+
+
+// Detect when window size changes
+// and make sure the viewport is correctly in focus
+var adaptScreenTimer = null;
+$(window).on('resize', function(e) {
+	
+	if ( adaptScreenTimer != null ) clearTimeout(adaptScreenTimer);
+
+	if ( currentView == "Results" ) {
+		adaptScreenTimer = setTimeout(function() {
+			var pos = -$('#list_and_map_view_outer_container').position().top;
+			$('#main_container').css('transform', 'translateY('+ pos + 'px) scale(1)');
+		}, 200);
+	}
+});
 
 
 // Initialize the map
@@ -400,6 +419,11 @@ $('#search_button').hammer({
 	// Prevent scrolling from being misinterpreted as tapping
 	'tap_max_distance': 1
 }).on('tap', function(e) {
+
+	// Make sure keyboard is closed
+	setTimeout(function() {
+		$('#departure_from, #date_start, #date_end, #max_budget').blur();
+	}, 700);
 
 	// Remove old results
 	$('#search_results_list .result:not(#list_template)').remove();
