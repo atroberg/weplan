@@ -559,6 +559,10 @@ div.done button.back {
 	font-size: 2em;
 	margin-right: 0.2em;
 	margin-top:-0.1em;
+	-webkit-transition:all .5s;
+	-moz-transition:all .5s;
+	-ms-transition:all .5s;
+	transition:all .5s;
 }
 
 .result .fa-heart.active {
