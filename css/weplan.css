@@ -4,6 +4,14 @@ html,body {
 	overflow:hidden;
 }
 
+/* Palm image */
+#search_page header img {
+	width: 112px;
+	float: right;
+	margin-right: 1em;
+	margin-top: -3px;
+}
+
 body {
 	font-size:18px;
 	margin:0;
